@@ -26,8 +26,7 @@ func main() {
 	e.POST("/incr", incrementHandler)
 
 	// 8080ポートで起動
-	// e.Logger.Fatal(e.Start(":8080"))
-	e.Start(":8080")
+	e.Logger.Fatal(e.Start(":8080"))
 }
 
 // レスポンスに`Hello World`を書き込むハンドラー
@@ -62,7 +61,6 @@ func incrementHandler(c echo.Context) error {
 	if err := c.Bind(&incrRequest); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
-	fmt.Println(incrRequest.Num)
 	counter += incrRequest.Num
 	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
