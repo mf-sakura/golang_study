@@ -24,7 +24,10 @@ func CatFile(path string) (err error) {
 			fmt.Println("Error Handling in defer called.")
 		}
 		// fileはCloseする必要がある。
-		file.Close()
+		// `err := file.Close()`としてしまうとdefer関数内のスコープでerrを定義してしまう為、CatFileの戻り値とならない。
+		if closeErr := file.Close(); closeErr != nil {
+			err = closeErr
+		}
 	}()
 
 	buf := make([]byte, 1024)

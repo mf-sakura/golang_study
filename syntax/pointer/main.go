@@ -6,6 +6,9 @@ import (
 
 func main() {
 	n := 100
+	// %vでその型のデフォルトのフォーマットで表示する
+	fmt.Printf("Address of n is %v\n", &n)
+
 	// 値渡し
 	// コピーされるので、元のnに変化はない
 	returnValue := increment(n)
@@ -18,8 +21,10 @@ func main() {
 }
 
 func increment(n int) int {
+	fmt.Printf("Address of n is %v\n", &n)
 	return n + 1
 }
 func incrementWithPointer(n *int) {
+	fmt.Printf("Address of n is %v\n", n)
 	*n++
 }
