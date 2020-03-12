@@ -13,13 +13,13 @@ migrate/init:
 	mysql -u root -h localhost --protocol tcp -e "create database \`$(DBNAME)\`" -p
 
 migrate/status:
-	@goose -path migrations mysql "$(DATASOURCE)" status
+	goose status
 
 migrate/up:
-	@goose -path migrations mysql "$(DATASOURCE)" up
+	goose up
 
-__migrate/down:
-	@goose -path migrations mysql "$(DATASOURCE)" down
+migrate/down:
+	goose down
 
 .env:
 	cp $@.example $@
