@@ -1,19 +1,25 @@
-mod:
-	go mod vendor
-build:
-	go build -o bin/echo_server
+DBNAME:=golang_study
+DATASOURCE:=root:password@tcp(127.0.0.1:3306)/$(DBNAME)
 
-hello:
-	curl localhost:8080/hello
+install:
+	which goose || GO111MODULE=off go get -u github.com/pressly/goose/cmd/goose
 
-unauthorized:
-	curl -i localhost:8080/401
+setup: install docker-compose/up migrate/init migrate/up
 
-square:
-	curl localhost:8080/square -H "num:2"
+mysql:
+	mysql -u root -h localhost --protocol tcp -p $(DBNAME)
 
-square_bad_request:
-	curl -i localhost:8080/square -H "num:a"
+migrate/init:
+	mysql -u root -h localhost --protocol tcp -e "create database \`$(DBNAME)\`" -p
 
-incr:
-	curl -X POST localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
+migrate/status:
+	@goose -path migrations mysql "$(DATASOURCE)" status
+
+migrate/up:
+	@goose -path migrations mysql "$(DATASOURCE)" up
+
+__migrate/down:
+	@goose -path migrations mysql "$(DATASOURCE)" down
+
+.env:
+	cp $@.example $@
