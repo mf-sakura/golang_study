@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -23,26 +23,24 @@ func (controller *UserController) Create(c echo.Context) error {
 	c.Bind(&u)
 	id, err := database.Store(controller.db, u)
 	if err != nil {
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(201, id)
+	return c.JSON(http.StatusCreated, id)
 }
 
 func (controller *UserController) Index(c echo.Context) error {
-	fmt.Println(controller.db)
 	users, err := database.FindAll(controller.db)
 	if err != nil {
-		fmt.Println(err)
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(200, users)
+	return c.JSON(http.StatusOK, users)
 }
 
 func (controller *UserController) Show(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	user, err := database.FindById(controller.db, id)
 	if err != nil {
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
