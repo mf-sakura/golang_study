@@ -1,4 +1,3 @@
-// メイン関数(実行時に呼ばれる関数)を含むpackageはmainにする
 package main
 
 import (
