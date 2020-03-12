@@ -6,10 +6,8 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-
-	"github.com/mf-sakura/golang_study/db/database_sql/interfaces/database"
-
 	"github.com/mf-sakura/golang_study/db/database_sql/domain"
+	"github.com/mf-sakura/golang_study/db/database_sql/interfaces/database"
 )
 
 type UserController struct {
