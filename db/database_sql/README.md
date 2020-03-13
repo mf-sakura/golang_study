@@ -42,16 +42,3 @@ make migrate/up
 # railsでいう rails db:rollback step=1
 make migrate/down
 ```
-
-## Help
-```sh
-Usage of main.go
-  -a string
-        action (default "-h")
-  -f string
-        first name (default "Alan")
-  -i string
-        user id
-  -l string
-        last name (default "Turing")
-```
