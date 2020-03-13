@@ -2,10 +2,8 @@ package controllers
 
 import (
 	"database/sql"
-	"net/http"
 	"strconv"
 
-	"github.com/labstack/echo/v4"
 	"github.com/mf-sakura/golang_study/db/database_sql/domain"
 	"github.com/mf-sakura/golang_study/db/database_sql/interfaces/database"
 )
@@ -18,29 +16,32 @@ func NewUserController(db *sql.DB) *UserController {
 	return &UserController{db: db}
 }
 
-func (controller *UserController) Create(c echo.Context) error {
-	u := domain.User{}
-	c.Bind(&u)
-	id, err := database.Store(controller.db, u)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+func (controller *UserController) Create(firstName string, lastName string) (domain.User, error) {
+	user := domain.User{
+		FirstName: firstName,
+		LastName:  lastName,
 	}
-	return c.JSON(http.StatusCreated, id)
+	id, err := database.Store(controller.db, user)
+	if err != nil {
+		return domain.User{}, err
+	}
+	user.ID = id
+	return user, nil
 }
 
-func (controller *UserController) Index(c echo.Context) error {
+func (controller *UserController) Index() ([]domain.User, error) {
 	users, err := database.FindAll(controller.db)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return nil, err
 	}
-	return c.JSON(http.StatusOK, users)
+	return users, nil
 }
 
-func (controller *UserController) Show(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := database.FindById(controller.db, id)
+func (controller *UserController) Show(id string) (domain.User, error) {
+	identifier, err := strconv.Atoi(id)
+	user, err := database.FindById(controller.db, identifier)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return user, err
 	}
-	return c.JSON(http.StatusOK, user)
+	return user, nil
 }
