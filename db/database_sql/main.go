@@ -13,7 +13,7 @@ func main() {
 	sqlHandler := infrastructure.NewSqlHandler()
 	userController := controllers.NewUserController(sqlHandler.Conn)
 	option := flag.String("a", "-h", "action")
-	id := flag.String("i", "1", "user id")
+	id := flag.String("i", "", "user id")
 	firstName := flag.String("f", "Alan", "first name")
 	lastName := flag.String("l", "Turing", "last name")
 	flag.Parse()
@@ -22,7 +22,7 @@ func main() {
 	case "index":
 		users, err := userController.Index()
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
 		for _, user := range users {
 			fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
