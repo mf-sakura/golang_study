@@ -1,3 +1,0 @@
-development:
-    driver: mysql
-    open: root:password@tcp(localhost:3306)/golang_study
