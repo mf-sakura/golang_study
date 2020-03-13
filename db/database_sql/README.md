@@ -2,7 +2,7 @@
 
 ## Setup
 ```sh
-make setup
+$ make setup
 ```
 
 ## Command
@@ -16,29 +16,29 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-go run main.go -a index
+$ go run main.go -a index
 ```
 
 ### ユーザー詳細
 ```sh
-go run main.go -a show -i 1
+$ go run main.go -a show -i 1
 ```
 
 ### ユーザー作成
 ```sh
-go run main.go -a create -f Alan -l Turing
+$ go run main.go -a create -f Alan -l Turing
 ```
 
 ### DB
 ```sh
 # mysqlのコンソールに入る
-make mysql # passwordはそのままpassword
+$ make mysql # passwordはそのままpassword
 
 # migrate/up
 # railsでいう rails db:migrate
-make migrate/up
+$ make migrate/up
 
 # migrate/down
 # railsでいう rails db:rollback step=1
-make migrate/down
+$ make migrate/down
 ```
