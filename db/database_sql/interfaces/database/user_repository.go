@@ -29,19 +29,19 @@ func FindById(db *sql.DB, identifier int) (user domain.User, err error) {
 	row, err := db.Query("SELECT id, first_name, last_name FROM users WHERE id = ?", identifier)
 	defer row.Close()
 	if err != nil {
-		return
+		return user, err
 	}
 	var id int
 	var firstName string
 	var lastName string
 	row.Next()
 	if err = row.Scan(&id, &firstName, &lastName); err != nil {
-		return
+		return user, err
 	}
 	user.ID = id
 	user.FirstName = firstName
 	user.LastName = lastName
-	return
+	return user, nil
 }
 
 func FindAll(db *sql.DB) (users domain.Users, err error) {
