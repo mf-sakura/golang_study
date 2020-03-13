@@ -6,10 +6,6 @@ import (
 	"github.com/mf-sakura/golang_study/db/database_sql/domain"
 )
 
-type UserRepository struct {
-	db *sql.DB
-}
-
 func Store(db *sql.DB, u domain.User) (id int, err error) {
 	result, err := db.Exec(
 		"INSERT INTO users (first_name, last_name) VALUES (?,?)", u.FirstName, u.LastName,
