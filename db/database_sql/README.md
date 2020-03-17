@@ -2,6 +2,7 @@
 
 ## Setup
 ```sh
+$ make docker-compose/up
 $ make setup
 ```
 
