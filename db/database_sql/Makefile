@@ -7,7 +7,7 @@ install:
 docker-compose/up:
 	docker-compose up -d
 
-setup: .env install docker-compose/up migrate/init migrate/up
+setup: .env install migrate/init migrate/up
 
 mysql:
 	mysql -u root -h localhost --protocol tcp -p $(DBNAME)
