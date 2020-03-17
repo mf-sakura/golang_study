@@ -1,5 +1,5 @@
 DBNAME:=golang_study
-DATASOURCE:=root:password@tcp(localhost:3306)/$(DBNAME)
+DATASOURCE:=root:password@tcp(localhost:3306)/$(DBNAME)?parseTime=true
 
 install:
 	which goose || GO111MODULE=off go get -u github.com/pressly/goose/cmd/goose
