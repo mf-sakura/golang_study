@@ -1,8 +1,9 @@
 Table Of Content
 
-# database_sqlを使ったCLIツール
-database/sqlは
+# sqlxを使ったCLIツール
+sqlxとは。。
 
+## Table Of Content
 - [Setup](#Setup)
 - [Command](Command)
   - [ユーザー一覧](#ユーザー一覧)
@@ -56,5 +57,6 @@ $ make migrate/down
 ```
 
 # 課題
+sqlxを使って。
 1. ユーザーの情報を編集(PUT)するアクションを追加し
 2. トランザクションかけてみる。
