@@ -1,5 +1,5 @@
 DBNAME:=golang_study
-DATASOURCE:=root:password@tcp(localhost:3306)/$(DBNAME)?parseTime=true
+DATASOURCE:=root:password@tcp(127.0.0.1:3314)/$(DBNAME)?parseTime=true
 
 install:
 	which goose || GO111MODULE=off go get -u github.com/pressly/goose/cmd/goose
@@ -10,10 +10,10 @@ docker-compose/up:
 setup: .env install migrate/init migrate/up
 
 mysql:
-	mysql -u root -h localhost --protocol tcp -p $(DBNAME)
+	mysql -u root -h 127.0.0.1 --protocol tcp --port 3314 -p $(DBNAME)
 
 migrate/init:
-	mysql -u root -h localhost --protocol tcp -e "create database \`$(DBNAME)\`" -p
+	mysql -u root -h 127.0.0.1 --protocol tcp --port 3314 -e "create database \`$(DBNAME)\`" -p
 
 migrate/status:
 	goose -dir "db/migrations" mysql "$(DATASOURCE)" status
