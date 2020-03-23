@@ -61,9 +61,49 @@ $ ./main -a update -i [ID] -f [firstName] -l [lastName]
 ```
 2. トランザクションかけてみる。
 3. 下記のようなAPIサーバーを実装してください。
-```sh
-GET /users ユーザー一覧
-GET /users/:id ユーザー詳細
-POST /users ユーザー作成
-PUT /users/:id ユーザー情報編集
+
+## GET /users ユーザー一覧
+res body
+```json
+[
+  {
+    id: 1,
+    first_name: "first_name",
+    last_name: "last_name"
+  },
+  {
+    id: 2,
+    first_name: "first_name_2",
+    last_name: "last_name_2"
+  }
+]
+```
+
+## GET /users/:id ユーザー詳細
+res body
+```json
+{
+  id: 1,
+  first_name: "first_name",
+  last_name: "last_name"
+}
+```
+
+## POST /users ユーザー作成
+req body
+```json
+{
+  first_name: "first_name",
+  last_name: "last_name"
+}
+```
+
+## PUT /users/:id ユーザー情報編集
+req body
+```json
+{
+  id: 1,
+  first_name: "first_name",
+  last_name: "last_name"
+}
 ```
