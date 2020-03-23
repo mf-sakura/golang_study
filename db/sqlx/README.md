@@ -52,11 +52,20 @@ $ make mysql # passwordはそのままpassword
 $ make migrate/up
 
 # migrate/down
-# railsでいう rails db:rollback step=1
+# railsでいう rails db:rollback
 $ make migrate/down
 ```
 
 # 課題
-sqlxを使って。
-1. ユーザーの情報を編集(PUT)するアクションを追加し
+1. 下記のコマンドを実行した時にユーザーの情報を編集できるようにしてください。
+```sh
+$ ./main -a update -i 2 -f [firstName] -l [lastName]
+```
 2. トランザクションかけてみる。
+3. 下記のようなAPIサーバーを実装してください。
+```sh
+GET /users ユーザー一覧
+GET /users/:id ユーザー詳細
+POST /users ユーザー作成
+PUT /users/:id ユーザー情報編集
+```
