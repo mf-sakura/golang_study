@@ -59,7 +59,7 @@ $ make migrate/down
 ```sh
 $ ./main -a update -i [ID] -f [firstName] -l [lastName]
 ```
-2. トランザクションかけてみる。
+2. トランザクションかけてみる。（ここどういう表現にするかちょっと迷い中）
 3. 下記のようなAPIサーバーを実装してください。
 
 ## GET /users ユーザー一覧
