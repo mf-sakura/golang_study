@@ -17,17 +17,17 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-$ go run main.go -a index
+$ ./main main.go -a index
 ```
 
 ### ユーザー詳細
 ```sh
-$ go run main.go -a show -i 1
+$ ./main main.go -a show -i 1
 ```
 
 ### ユーザー作成
 ```sh
-$ go run main.go -a create -f Alan -l Turing
+$ ./main main.go -a create -f Alan -l Turing
 ```
 
 ### DB
