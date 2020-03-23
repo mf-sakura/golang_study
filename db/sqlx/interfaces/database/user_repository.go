@@ -7,17 +7,21 @@ import (
 )
 
 func Store(db *sqlx.DB, u domain.User) (id int, err error) {
+	// prepared statement
 	stmt, err := db.Prepare("INSERT INTO users (first_name, last_name) VALUES (?,?)")
 	if err != nil {
 		return id, err
 	}
+	// 関数終了時にstatementをcloseする
 	defer stmt.Close()
+	// SQL文実行
 	stmt.Exec(u.FirstName, u.LastName)
 	return u.ID, nil
 }
 
 func FindById(db *sqlx.DB, identifier int) (domain.User, error) {
 	var user domain.User
+	// https://godoc.org/github.com/jmoiron/sqlx#DB.Get
 	if err := db.Get(&user, "SELECT id, first_name, last_name FROM users WHERE id = ? limit 1", identifier); err != nil {
 		return user, err
 	}
@@ -26,6 +30,7 @@ func FindById(db *sqlx.DB, identifier int) (domain.User, error) {
 
 func FindAll(db *sqlx.DB) (domain.Users, error) {
 	var users []domain.User
+	// https://godoc.org/github.com/jmoiron/sqlx#DB.Select
 	if err := db.Select(&users, "SELECT id, first_name, last_name FROM users"); err != nil {
 		return users, err
 	}

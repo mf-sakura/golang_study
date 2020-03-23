@@ -8,14 +8,17 @@ import (
 	"github.com/mf-sakura/golang_study/db/database_sql/interfaces/database"
 )
 
+// UserController is a struct for db connection.
 type UserController struct {
 	db *sql.DB
 }
 
+// NewUserController create a struct , UserController.
 func NewUserController(db *sql.DB) *UserController {
 	return &UserController{db: db}
 }
 
+// Create is a function for creating a user.
 func (controller *UserController) Create(firstName string, lastName string) (domain.User, error) {
 	user := domain.User{
 		FirstName: firstName,
@@ -29,6 +32,7 @@ func (controller *UserController) Create(firstName string, lastName string) (dom
 	return user, nil
 }
 
+// Index is a function for returning all users.
 func (controller *UserController) Index() ([]domain.User, error) {
 	users, err := database.FindAll(controller.db)
 	if err != nil {
@@ -37,7 +41,9 @@ func (controller *UserController) Index() ([]domain.User, error) {
 	return users, nil
 }
 
+// Show is a function for returning a user.
 func (controller *UserController) Show(id string) (domain.User, error) {
+	// idをintegerにcastする
 	identifier, err := strconv.Atoi(id)
 	user, err := database.FindById(controller.db, identifier)
 	if err != nil {

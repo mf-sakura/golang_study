@@ -30,7 +30,9 @@ func FindById(db *sql.DB, identifier int) (user domain.User, err error) {
 	var id int
 	var firstName string
 	var lastName string
+	// 次の行へ
 	row.Next()
+	// selectした値をコピー
 	if err = row.Scan(&id, &firstName, &lastName); err != nil {
 		return user, err
 	}
@@ -46,6 +48,8 @@ func FindAll(db *sql.DB) (users domain.Users, err error) {
 	if err != nil {
 		return domain.Users{}, err
 	}
+	// 行がなくなるまでループさせる
+	// https://godoc.org/database/sql#Rows.Next
 	for rows.Next() {
 		var id int
 		var firstName string

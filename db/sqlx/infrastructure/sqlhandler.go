@@ -6,15 +6,16 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
 
-type SqlHandler struct {
+// SQLHandler is a struct for db connection
+type SQLHandler struct {
 	Conn *sqlx.DB
 }
 
-func NewSqlHandler() *SqlHandler {
+// NewSQLHandler make SQLHandler
+func NewSQLHandler() *SQLHandler {
 	log.SetFlags(log.Ldate + log.Ltime + log.Lshortfile)
 	log.SetOutput(os.Stdout)
 
@@ -29,7 +30,7 @@ func NewSqlHandler() *SqlHandler {
 		panic(err.Error)
 	}
 
-	sqlHandler := new(SqlHandler)
+	sqlHandler := new(SQLHandler)
 	sqlHandler.Conn = conn
 	return sqlHandler
 }

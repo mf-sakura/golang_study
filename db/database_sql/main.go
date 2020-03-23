@@ -12,6 +12,7 @@ import (
 func main() {
 	sqlHandler := infrastructure.NewSqlHandler()
 	userController := controllers.NewUserController(sqlHandler.Conn)
+	// フラグを-a追加その後も同様
 	option := flag.String("a", "-h", "action")
 	id := flag.String("i", "", "user id")
 	firstName := flag.String("f", "Alan", "first name")
@@ -19,6 +20,7 @@ func main() {
 	flag.Parse()
 
 	switch *option {
+	// ユーザー一覧
 	case "index":
 		users, err := userController.Index()
 		if err != nil {
@@ -28,6 +30,7 @@ func main() {
 			fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
 		}
 		return
+	// ユーザー詳細
 	case "show":
 		if *id == "" {
 			log.Fatal("You need a user.id.")
@@ -38,6 +41,7 @@ func main() {
 		}
 		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
 		return
+	// ユーザー作成
 	case "create":
 		if *firstName == "" {
 			log.Fatal("You need a first name.")
