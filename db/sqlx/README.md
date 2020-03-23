@@ -29,17 +29,17 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-$ go run main.go -a index
+$ ./main -a index
 ```
 
 ### ユーザー詳細
 ```sh
-$ go run main.go -a show -i 1
+$ ./main -a show -i 1
 ```
 
 ### ユーザー作成
 ```sh
-$ go run main.go -a create -f Alan -l Turing
+$ ./main -a create -f Alan -l Turing
 ```
 
 ### DB
@@ -59,7 +59,7 @@ $ make migrate/down
 # 課題
 1. 下記のコマンドを実行した時にユーザーの情報を編集できるようにしてください。
 ```sh
-$ ./main -a update -i 2 -f [firstName] -l [lastName]
+$ ./main -a update -i [ID] -f [firstName] -l [lastName]
 ```
 2. トランザクションかけてみる。
 3. 下記のようなAPIサーバーを実装してください。
