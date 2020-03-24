@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	sqlHandler := infrastructure.NewSqlHandler()
+	sqlHandler := infrastructure.NewSQLHandler()
 	userController := controllers.NewUserController(sqlHandler.Conn)
 	// フラグを-a追加その後も同様
 	option := flag.String("a", "-h", "action")
