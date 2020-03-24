@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	// mysql driver
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
 
