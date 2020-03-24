@@ -45,7 +45,7 @@ func (controller *UserController) Index() ([]domain.User, error) {
 func (controller *UserController) Show(id string) (domain.User, error) {
 	// idをintegerにcastする
 	identifier, err := strconv.Atoi(id)
-	user, err := database.FindById(controller.db, identifier)
+	user, err := database.FindByID(controller.db, identifier)
 	if err != nil {
 		return user, err
 	}
