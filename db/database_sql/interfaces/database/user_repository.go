@@ -6,6 +6,7 @@ import (
 	"github.com/mf-sakura/golang_study/db/database_sql/domain"
 )
 
+// Store is a function for creating a user.
 func Store(db *sql.DB, u domain.User) (id int, err error) {
 	result, err := db.Exec(
 		"INSERT INTO users (first_name, last_name) VALUES (?,?)", u.FirstName, u.LastName,
@@ -21,7 +22,8 @@ func Store(db *sql.DB, u domain.User) (id int, err error) {
 	return
 }
 
-func FindById(db *sql.DB, identifier int) (user domain.User, err error) {
+// FindByID is a function for getting a user.
+func FindByID(db *sql.DB, identifier int) (user domain.User, err error) {
 	row, err := db.Query("SELECT id, first_name, last_name FROM users WHERE id = ?", identifier)
 	defer row.Close()
 	if err != nil {
@@ -42,6 +44,7 @@ func FindById(db *sql.DB, identifier int) (user domain.User, err error) {
 	return user, nil
 }
 
+// FindAll is a function for getting all users.
 func FindAll(db *sql.DB) (users domain.Users, err error) {
 	rows, err := db.Query("SELECT id, first_name, last_name FROM users")
 	defer rows.Close()
