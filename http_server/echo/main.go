@@ -13,6 +13,10 @@ var (
 	counter = 0
 )
 
+const (
+	SQUARE_NUM_LIMIT = 100
+)
+
 func main() {
 	e := echo.New()
 
@@ -50,8 +54,14 @@ func squareHandler(c echo.Context) error {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
-	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
-	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
+
+	if num >= SQUARE_NUM_LIMIT {
+		// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
+		return c.String(http.StatusBadRequest, fmt.Sprintf("num must be less than %d", SQUARE_NUM_LIMIT))
+	} else {
+		// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
+		return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
+	}
 }
 
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
