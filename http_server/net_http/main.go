@@ -28,6 +28,8 @@ func main() {
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
 
+	http.HandleFunc("/alpaca", alpacaHandler)
+
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
 }
@@ -87,6 +89,25 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+func alpacaHandler(w http.ResponseWriter, req *http.Request) {
+	alpacaAa := `
+    うるせぇアルパカぶつけるぞ 
+    Δ~~~~Δ 
+    ξ ･ェ･ ξ 
+    ξ　~　ξ 
+    ξ　　 ξ 
+    ξ　　　“~～~～〇 
+    ξ　　　　　　 ξ 
+    ξ　ξ　ξ~～~ξ　ξ 
+    　ξ_ξξ_ξ　ξ_ξξ_ξ 
+    　　ヽ(´･ω･)ﾉ 
+    　　　 |　 / 
+    　　　 UU"
+  `
+
+	fmt.Fprint(w, alpacaAa)
 }
 
 type incrRequest struct {
