@@ -28,6 +28,7 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	e.GET("/alpaca", alpacaHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -80,3 +81,23 @@ type incrRequest struct {
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
 }
+
+func alpacaHandler(c echo.Context) error {
+	alpacaAa := `
+    うるせぇアルパカぶつけるぞ 
+    Δ~~~~Δ 
+    ξ ･ェ･ ξ 
+    ξ　~　ξ 
+    ξ　　 ξ 
+    ξ　　　“~～~～〇 
+    ξ　　　　　　 ξ 
+    ξ　ξ　ξ~～~ξ　ξ 
+    　ξ_ξξ_ξ　ξ_ξξ_ξ 
+    　　ヽ(´･ω･)ﾉ 
+    　　　 |　 / 
+    　　　 UU
+  `
+
+	return c.String(http.StatusOK, alpacaAa)
+}
+
