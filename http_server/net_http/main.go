@@ -14,6 +14,10 @@ var (
 	counter = 0
 )
 
+const (
+	SQUARE_NUM_LIMIT = 100
+)
+
 func main() {
 	// GET
 	http.HandleFunc("/hello", helloHandler)
@@ -52,8 +56,14 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
-	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
-	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
+
+	if num >= SQUARE_NUM_LIMIT {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "num must be less than 100")
+	} else {
+		// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
+		fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
+	}
 }
 
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
