@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	//
+	http.HandleFunc("/auth", basicAuthHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -92,4 +94,17 @@ type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+func basicAuthHandler(w http.ResponseWriter, req *http.Request) {
+	username, password, ok := req.BasicAuth()
+	if !ok {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Need BasicAuth")
+		return
+	}
+	if username == "username" && password == "password" {
+		fmt.Fprint(w, "Welcome!!")
+		return
+	}
 }

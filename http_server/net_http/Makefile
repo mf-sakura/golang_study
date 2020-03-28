@@ -21,3 +21,9 @@ incr:
 
 incr_by_get:
 	curl -X GET localhost:8080/incr -d '{"num":3}'
+
+authn:
+	curl -u username:password localhost:8080/auth
+
+authn_invalid:
+	curl localhost:8080/auth
