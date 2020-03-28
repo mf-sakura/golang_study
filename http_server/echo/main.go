@@ -24,6 +24,7 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	e.GET("/nyaan", nyaanHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -73,4 +74,12 @@ type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+func nyaanHandler(c echo.Context) error {
+	return c.String(http.StatusOK, `
+　∧,,∧
+（=・ω・）
+（,, ｕｕﾉ
+	`)
 }

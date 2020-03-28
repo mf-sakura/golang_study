@@ -21,5 +21,5 @@ square_with_100:
 incr:
 	curl -X POST localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
 
-incr_method_not_allowed:
-	curl -i -X PUT localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
+nyaan:
+	curl -i -X GET localhost:8080/nyaan
