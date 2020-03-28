@@ -18,3 +18,6 @@ square_with_100:
 
 incr:
 	curl -X POST localhost:8080/incr -d '{"num":3}'
+
+incr_by_get:
+	curl -X GET localhost:8080/incr -d '{"num":3}'
