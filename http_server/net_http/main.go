@@ -42,6 +42,8 @@ func unAuthorizedHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, "UnAuthorized")
 }
 
+const squareNumLimit = 100
+
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(w http.ResponseWriter, req *http.Request) {
 	// Headerの読み込み
@@ -56,7 +58,7 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if num >= 100 {
+	if num >= squareNumLimit {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, "num is grater than or equal to 100")
 		return

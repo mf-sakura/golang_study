@@ -41,6 +41,8 @@ func unAuthorizedHandler(c echo.Context) error {
 	return echo.NewHTTPError(http.StatusUnauthorized, "UnAuthorized")
 }
 
+const squareNumLimit = 100
+
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(c echo.Context) error {
 	// Headerの読み込み
@@ -52,7 +54,7 @@ func squareHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
 
-	if num >= 100 {
+	if num >= squareNumLimit {
 		return echo.NewHTTPError(http.StatusBadRequest, "num is grater than or equal to 100")
 	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
