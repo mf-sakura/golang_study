@@ -50,6 +50,11 @@ func squareHandler(c echo.Context) error {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
+
+	if err := greaterThan100(num); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("%v", err))
+	}
+
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -69,4 +74,12 @@ type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+func greaterThan100(num int) error {
+	limit := 100
+	if num < limit {
+		return nil
+	}
+	return fmt.Errorf("failed validation. greater than %d", limit)
 }
