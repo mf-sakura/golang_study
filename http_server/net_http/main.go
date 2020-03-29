@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	// DELETE Bodyの読み込み
+	http.HandleFunc("/decr", decrementHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -65,7 +67,7 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
-	if err := onlyPost(req); err != nil {
+	if err := allowedOnlyPostMethod(req); err != nil {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprint(w, fmt.Sprintf("%v", err))
 		return
@@ -78,15 +80,38 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 	buf := new(bytes.Buffer)
 	io.Copy(buf, body)
 
-	var incrRequest incrRequest
+	var countRequest counterRequest
 	// BodyのJSONを構造体に変換する
-	json.Unmarshal(buf.Bytes(), &incrRequest)
+	json.Unmarshal(buf.Bytes(), &countRequest)
 
-	counter += incrRequest.Num
+	counter = counterCalculator(countRequest, "increment")
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
 
-type incrRequest struct {
+// Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
+func decrementHandler(w http.ResponseWriter, req *http.Request) {
+	if err := allowedOnlyDeleteMethod(req); err != nil {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, fmt.Sprintf("%v", err))
+		return
+	}
+
+	body := req.Body
+	// bodyの読み込みに開いたio Readerを最後にCloseする
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	io.Copy(buf, body)
+
+	var countRequest counterRequest
+	// BodyのJSONを構造体に変換する
+	json.Unmarshal(buf.Bytes(), &countRequest)
+
+	counter = counterCalculator(countRequest, "decrement")
+	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+type counterRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
@@ -100,9 +125,26 @@ func greaterThan100(num int) error {
 	return fmt.Errorf("failed validation. greater than %d", limit)
 }
 
-func onlyPost(req *http.Request) error {
+func allowedOnlyPostMethod(req *http.Request) error {
 	if req.Method != http.MethodPost {
 		return fmt.Errorf("access not allowed %s", req.Method)
 	}
 	return nil
+}
+
+func allowedOnlyDeleteMethod(req *http.Request) error {
+	if req.Method != http.MethodDelete {
+		return fmt.Errorf("access not allowed %s", req.Method)
+	}
+	return nil
+}
+
+func counterCalculator(req counterRequest, expression string) int {
+	if expression == "increment" {
+		return counter + req.Num
+	} else if expression == "decrement" {
+		return counter - req.Num
+	} else {
+		return counter
+	}
 }
