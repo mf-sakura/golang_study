@@ -24,6 +24,8 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// DELETE Bodyの読み込み
+	e.DELETE("/decr", decrementHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -66,7 +68,17 @@ func incrementHandler(c echo.Context) error {
 	if err := c.Bind(&incrRequest); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
-	counter += incrRequest.Num
+	counter = countCalculator(incrRequest, "increment")
+	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+// Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
+func decrementHandler(c echo.Context) error {
+	var incrRequest incrRequest
+	if err := c.Bind(&incrRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+	counter = countCalculator(incrRequest, "decrement")
 	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
 
@@ -82,4 +94,14 @@ func greaterThan100(num int) error {
 		return nil
 	}
 	return fmt.Errorf("failed validation. greater than %d", limit)
+}
+
+func countCalculator(req incrRequest, expression string) int {
+	if expression == "increment" {
+		return counter + req.Num
+	} else if expression == "decrement" {
+		return counter - req.Num
+	} else {
+		return counter
+	}
 }
