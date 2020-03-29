@@ -69,7 +69,10 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter = countCalculator(incrRequest, "increment")
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	res := &counterResponse{
+		Counter: counter,
+	}
+	return c.JSON(http.StatusOK, res)
 }
 
 // Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
@@ -86,6 +89,10 @@ type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+type counterResponse struct {
+	Counter int `json:"counter"`
 }
 
 func greaterThan100(num int) error {
