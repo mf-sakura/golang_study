@@ -65,6 +65,12 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if err := onlyPost(req); err != nil {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, fmt.Sprintf("%v", err))
+		return
+	}
+
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
@@ -92,4 +98,11 @@ func greaterThan100(num int) error {
 		return nil
 	}
 	return fmt.Errorf("failed validation. greater than %d", limit)
+}
+
+func onlyPost(req *http.Request) error {
+	if req.Method != http.MethodPost {
+		return fmt.Errorf("access not allowed %s", req.Method)
+	}
+	return nil
 }
