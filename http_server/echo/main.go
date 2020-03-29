@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	counter = 0
+	counter  = 0
+	sleeping = false
 )
 
 func main() {
@@ -25,6 +26,8 @@ func main() {
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
 
+	e.POST("/goodbye", goodbyeHandler)
+
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -32,7 +35,16 @@ func main() {
 // レスポンスに`Hello World`を書き込むハンドラー
 // 引数をこの形にするのはechoの仕様から決まっている
 func helloHandler(c echo.Context) error {
+	if sleeping {
+		return echo.NewHTTPError(http.StatusFailedDependency)
+	}
+
 	return c.String(http.StatusOK, "Hello World from Go.")
+}
+
+func goodbyeHandler(c echo.Context) error {
+	sleeping = true
+	return c.String(http.StatusOK, "Goodbye! See you next time!")
 }
 
 // 200以外のHTTP Statusを返すハンドラー
@@ -42,6 +54,10 @@ func unAuthorizedHandler(c echo.Context) error {
 
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(c echo.Context) error {
+	if sleeping {
+		return echo.NewHTTPError(http.StatusFailedDependency)
+	}
+
 	// Headerの読み込み
 	numStr := c.Request().Header.Get("num")
 	// String -> Intの変換
@@ -60,6 +76,10 @@ func squareHandler(c echo.Context) error {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(c echo.Context) error {
+	if sleeping {
+		return echo.NewHTTPError(http.StatusFailedDependency)
+	}
+
 	incrRequest := incrRequest{}
 	if err := c.Bind(&incrRequest); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
