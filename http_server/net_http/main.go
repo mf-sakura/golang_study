@@ -84,7 +84,7 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 	// BodyのJSONを構造体に変換する
 	json.Unmarshal(buf.Bytes(), &countRequest)
 
-	counter = counterCalculator(countRequest, "increment")
+	counter = countCalculator(countRequest, "increment")
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
 
@@ -107,7 +107,7 @@ func decrementHandler(w http.ResponseWriter, req *http.Request) {
 	// BodyのJSONを構造体に変換する
 	json.Unmarshal(buf.Bytes(), &countRequest)
 
-	counter = counterCalculator(countRequest, "decrement")
+	counter = countCalculator(countRequest, "decrement")
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
 
@@ -139,7 +139,7 @@ func allowedOnlyDeleteMethod(req *http.Request) error {
 	return nil
 }
 
-func counterCalculator(req counterRequest, expression string) int {
+func countCalculator(req counterRequest, expression string) int {
 	if expression == "increment" {
 		return counter + req.Num
 	} else if expression == "decrement" {
