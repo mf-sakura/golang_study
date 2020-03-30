@@ -24,6 +24,8 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// GET クエリパラメータの読み込み
+	e.GET("/addition", additionHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -66,6 +68,16 @@ func incrementHandler(c echo.Context) error {
 	}
 	counter += incrRequest.Num
 	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+// クエリパラメータから２つの値を取得して、加算したものを返すハンドラー
+func additionHandler(c echo.Context) error {
+	p1, p1Err := strconv.Atoi(c.QueryParam("p1"))
+	p2, p2Err := strconv.Atoi(c.QueryParam("p2"))
+	if p1Err != nil || p2Err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "p1 and/or p2 is not integer")
+	}
+	return c.String(http.StatusOK, fmt.Sprintf("Addition result is %d \n", p1+p2))
 }
 
 type incrRequest struct {
