@@ -52,6 +52,12 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
+
+	if num >= 100 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "too many numbers lol")
+		return
+	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
