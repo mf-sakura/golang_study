@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	// GET クエリパラメータの読み込み
+	http.HandleFunc("/addition", additionHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -82,6 +84,24 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+// クエリパラメータから２つの値を取得して、加算したものを返すハンドラー
+func additionHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "Method is not GET")
+		return
+	}
+	q := req.URL.Query()
+	p1, p1Err := strconv.Atoi(q.Get("p1"))
+	p2, p2Err := strconv.Atoi(q.Get("p2"))
+	if p1Err != nil || p2Err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "p1 and/or p2 is not integer")
+		return
+	}
+	fmt.Fprint(w, fmt.Sprintf("Addition result is %d \n", p1+p2))
 }
 
 type incrRequest struct {
