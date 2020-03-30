@@ -30,6 +30,9 @@ func main() {
 	e.PUT("/incr", methodNotAllowedHandler)
 	e.DELETE("/incr", methodNotAllowedHandler)
 
+	// POST Bodyの読み込み
+	e.POST("/dncr", decrementHandler)
+
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -77,6 +80,17 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
+	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+// Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
+// DBがまだないので簡易的なもの
+func decrementHandler(c echo.Context) error {
+	incrRequest := incrRequest{}
+	if err := c.Bind(&incrRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+	counter -= incrRequest.Num
 	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
 }
 
