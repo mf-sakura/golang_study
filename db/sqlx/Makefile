@@ -25,3 +25,9 @@ migrate/down:
 
 .env:
 	cp $@.example $@
+
+vendor:
+	go mod vendor
+
+build:
+	go build -o bin/sqlx
