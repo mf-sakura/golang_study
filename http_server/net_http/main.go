@@ -65,6 +65,10 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		fmt.Fprint(w, fmt.Sprintf("Only POST method is permitted\n"))
+		return
+	}
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
