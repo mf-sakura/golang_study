@@ -50,7 +50,7 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 	num, err := strconv.Atoi(numStr)
 	if err != nil {
 		// 他のエラーの可能性もあるがサンプルとして纏める
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
