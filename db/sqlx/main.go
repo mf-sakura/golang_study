@@ -12,10 +12,10 @@ import (
 func main() {
 	sqlHandler := infrastructure.NewSQLHandler()
 	userController := controllers.NewUserController(sqlHandler.Conn)
-	option := flag.String("a", "-h", "action")
+	option := flag.String("a", "", "action")
 	id := flag.String("i", "", "user id")
-	firstName := flag.String("f", "Alan", "first name")
-	lastName := flag.String("l", "Turing", "last name")
+	firstName := flag.String("f", "", "first name")
+	lastName := flag.String("l", "", "last name")
 	flag.Parse()
 
 	switch *option {
