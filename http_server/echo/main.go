@@ -24,6 +24,11 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// FIXME 本来は group とか使うのかな.. 時間なく諦めた
+	e.GET("/incr", methodNotAllowedHandler)
+	e.PATCH("/incr", methodNotAllowedHandler)
+	e.PUT("/incr", methodNotAllowedHandler)
+	e.DELETE("/incr", methodNotAllowedHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -38,6 +43,11 @@ func helloHandler(c echo.Context) error {
 // 200以外のHTTP Statusを返すハンドラー
 func unAuthorizedHandler(c echo.Context) error {
 	return echo.NewHTTPError(http.StatusUnauthorized, "UnAuthorized")
+}
+
+// 405 を返すハンドラー
+func methodNotAllowedHandler(c echo.Context) error {
+	return echo.NewHTTPError(http.StatusMethodNotAllowed, "MethodNotAllowed")
 }
 
 // Headerから数字を取得して、その二乗を返すハンドラー
