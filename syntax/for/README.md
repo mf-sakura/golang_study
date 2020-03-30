@@ -7,7 +7,7 @@ https://jovi0608.hatenablog.com/entry/2020/03/09/094737
 
 ## 対策
 linterを変えれば、検知してくれる。  
-[golangci-lint](https://github.com/golangci/golangci-lint)に含まれる[Scopelint]()  
+[golangci-lint](https://github.com/golangci/golangci-lint)に含まれる[Scopelint](https://github.com/kyoh86/scopelint)を使う  
 
 検証  
 ```
