@@ -24,6 +24,8 @@ func main() {
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
 
+	http.HandleFunc("/fizzbuzz", fizzbuzzHandler)
+
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
 }
@@ -82,6 +84,42 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+func fizzbuzzHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		fmt.Fprint(w, fmt.Sprintf("Only POST method is permitted\n"))
+		return
+	}
+
+	body := req.Body
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	io.Copy(buf, body)
+
+	var fizzbuzzRequest fizzbuzzRequest
+	json.Unmarshal(buf.Bytes(), &fizzbuzzRequest)
+
+	var fizzbuzz string
+	num := fizzbuzzRequest.Num
+
+	switch {
+	case num%15 == 0:
+		fizzbuzz = "FIZZ BUZZ!"
+	case num%3 == 0:
+		fizzbuzz = "FIZZ!"
+	case num%5 == 0:
+		fizzbuzz = "BUZZ!"
+	default:
+		fizzbuzz = strconv.Itoa(num)
+	}
+
+	fmt.Fprint(w, fmt.Sprintf("%s\n", fizzbuzz))
+}
+
+type fizzbuzzRequest struct {
+	Num int `json:"num"`
 }
 
 type incrRequest struct {
