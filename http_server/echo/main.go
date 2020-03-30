@@ -106,13 +106,9 @@ type incrRequest struct {
 }
 
 type incrResponse struct {
-	// jsonタグをつける事でjsonのunmarshalが出来る
-	// jsonパッケージに渡すので、Publicである必要がある
 	Counter int `json:"counter"`
 }
 
 type dncrResponse struct {
-	// jsonタグをつける事でjsonのunmarshalが出来る
-	// jsonパッケージに渡すので、Publicである必要がある
 	Counter int `json:"counter"`
 }
