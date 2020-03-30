@@ -6,12 +6,12 @@ import (
 )
 
 func main() {
-	if err := CatFile("test.txt"); err != nil {
+	if err := catFile("test.txt"); err != nil {
 		fmt.Println(err)
 	}
 }
 
-func CatFile(path string) (err error) {
+func catFile(path string) (err error) {
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Printf("File open error: %v\n", err)
