@@ -10,7 +10,10 @@ import (
 )
 
 var (
-	counter = 0
+	// incr と decr によってシェアされるカウンタ
+	shared_counter = 0
+	// decr_inde によって減算用に専有されるカウンタ
+	independeted_decr_counter = 0
 )
 
 func main() {
@@ -24,6 +27,10 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+
+	e.POST("/decr", decrementHandler)
+
+	e.POST("/decr_independent", decrementHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -64,12 +71,31 @@ func incrementHandler(c echo.Context) error {
 	if err := c.Bind(&incrRequest); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
-	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	shared_counter += incrRequest.Num
+	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", shared_counter))
+}
+
+func decrementHandler(c echo.Context) error {
+	decrRequest := decrRequest{}
+	if err := c.Bind(&decrRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+	if decrRequest.Inde_flag == 1 {
+		independeted_decr_counter -= decrRequest.Num
+		return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d\n", independeted_decr_counter))
+	} else {
+		shared_counter -= decrRequest.Num
+		return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d\n", shared_counter))
+	}
 }
 
 type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+type decrRequest struct {
+	Num int `json:"num"`
+	Inde_flag int `json:"inde_flag"`
 }

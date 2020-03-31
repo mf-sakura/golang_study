@@ -23,3 +23,9 @@ incr:
 
 invalid_incr_request:
 	curl -i localhost:8080/incr
+
+decr:
+	curl -X POST localhost:8080/decr -H 'Content-Type: application/json' -d '{"num":1, "inde_flag":0}'
+
+decr_inde:
+	curl -X POST localhost:8080/decr -H 'Content-Type: application/json' -d '{"num":1, "inde_flag":1}'
