@@ -20,3 +20,6 @@ square_bad_request2:
 
 incr:
 	curl -X POST localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
+
+invalid_incr_request:
+	curl -i localhost:8080/incr
