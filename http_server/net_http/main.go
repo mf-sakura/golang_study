@@ -68,6 +68,7 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprint(w, fmt.Sprintf("Only POST method is permitted\n"))
 		return
 	}
