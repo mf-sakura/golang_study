@@ -25,7 +25,7 @@ func main() {
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
 	// DELETE Bodyの読み込み
-	e.DELETE("/decr", decrementHandler)
+	e.POST("/decr", decrementHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))

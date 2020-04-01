@@ -90,7 +90,7 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 // Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
 func decrementHandler(w http.ResponseWriter, req *http.Request) {
-	if err := allowedOnlyDeleteMethod(req); err != nil {
+	if err := allowedOnlyPostMethod(req); err != nil {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprint(w, fmt.Sprintf("%v", err))
 		return

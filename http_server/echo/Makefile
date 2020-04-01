@@ -22,4 +22,4 @@ failed_incr:
 	curl -X GET localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
 
 decr:
-	curl -X DELETE localhost:8080/decr -H 'Content-Type: application/json' -d '{"num":3}'
+	curl -X POST localhost:8080/decr -H 'Content-Type: application/json' -d '{"num":3}'
