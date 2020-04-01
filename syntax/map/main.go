@@ -24,6 +24,10 @@ func main() {
 
 	for k, v := range studnetIDMap {
 		// fmt.Printfでフォーマットに従った文字列を標準出力に出せる
+		fmt.Printf("Name of StudentID:%d is %s\n", k, v)
+	}
+}
+
 func addMap(m map[string]string) {
 	m["a"] = "あ"
 }

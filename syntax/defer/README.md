@@ -8,4 +8,4 @@ Tour of Goではdeferの例が実用的でなかったので、実用的な例�
 defer内で呼んでいる`file.Close()`はエラーを戻り値に持ちます。  
 このエラーのハンドリングをしてください。  
 Named Return Valueを上手く活用してください。  
-`func CatFile(path string) (err error)`と定義すると、 `err`に代入された値が戻り値として返ります。  
+`func catFile(path string) (err error)`と定義すると、 `err`に代入された値が戻り値として返ります。  
