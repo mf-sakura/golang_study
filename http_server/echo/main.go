@@ -24,6 +24,7 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	e.POST("/fizzbuzz", fizzbuzzHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -73,12 +74,39 @@ func incrementHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, jsonMap)
 }
 
+func fizzbuzzHandler(c echo.Context) error {
+	fizzbuzzRequest := fizzbuzzRequest{}
+	if err := c.Bind(&fizzbuzzRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var fizzbuzz string
+	num := fizzbuzzRequest.Num
+
+	switch {
+	case num%15 == 0:
+		fizzbuzz = "FIZZ BUZZ!"
+	case num%3 == 0:
+		fizzbuzz = "FIZZ!"
+	case num%5 == 0:
+		fizzbuzz = "BUZZ!"
+	default:
+		fizzbuzz = strconv.Itoa(num)
+	}
+
+	jsonMap := map[string]string{
+		"fizzbuzz": fizzbuzz,
+	}
+
+	return c.JSON(http.StatusOK, jsonMap)
+}
+
+type fizzbuzzRequest struct {
+	Num int `json:"num"`
+}
+
 type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
-}
-
-type incrResponse struct {
-	Counter int `json:"counter"`
 }
