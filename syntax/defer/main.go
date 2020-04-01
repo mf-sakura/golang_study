@@ -11,6 +11,7 @@ func main() {
 	}
 }
 
+// CatFile file(test.txt)の中身を `cat` コマンドのように標準出力します
 func catFile(path string) (err error) {
 	file, openErr := os.Open(path)
 	if openErr != nil {
@@ -19,14 +20,20 @@ func catFile(path string) (err error) {
 		return
 	}
 
-	defer func() {
+	// 課題検証用 defer実行前にClose()して必ず already closed を発生させる
+	// file.Close()
+	defer func() (err error) {
 		if err != nil {
 			// エラー時にのみdeferで行いたい処理が書ける
 			fmt.Println("Error Handling in defer called.")
 		}
 		// fileはCloseする必要がある。
 		// 本当はエラーハンドリングが必要(課題)
-		file.Close()
+		if err = file.Close(); err != nil {
+			// エラー時にのみdeferで行いたい処理が書ける
+			fmt.Printf("Failed file.Close(). %v", err)
+		}
+		return
 	}()
 
 	// //エラーを明示的に返してdeferが呼ばれるか確認する。
