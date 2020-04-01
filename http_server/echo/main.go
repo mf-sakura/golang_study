@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
+	"math/rand"
 
 	"github.com/labstack/echo/v4"
 )
@@ -24,6 +26,8 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// ランダムなポーカーのハンドを返す
+	e.GET("/random_hand", randomHandHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -80,4 +84,23 @@ type incrRequest struct {
 
 type incrResponse struct {
 	Counter int `json:counter`
+}
+
+// ランダムなポーカーのハンドを返す
+// まだ同じカードを2回使ってしまうバグがある
+func randomHandHandler(c echo.Context) error {
+	suits := []string{"s", "h", "d", "c"}
+	numbers := []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
+
+	card1 := fmt.Sprintf("%s%s", choice(numbers), choice(suits))
+	card2 := fmt.Sprintf("%s%s", choice(numbers), choice(suits))
+	hand := fmt.Sprintf("%s%s", card1, card2)
+
+	return c.String(http.StatusOK, fmt.Sprintf("your hand is %s. raise or fold?", hand))
+}
+
+func choice(slice []string) string {
+    rand.Seed(time.Now().UnixNano())
+    i := rand.Intn(len(slice))
+    return slice[i]
 }

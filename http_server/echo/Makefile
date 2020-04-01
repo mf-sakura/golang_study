@@ -23,3 +23,6 @@ get_incr:
 
 incr:
 	curl -X POST localhost:8080/incr -H 'Content-Type: application/json' -d '{"num":3}'
+
+random_hand:
+	curl localhost:8080/random_hand
