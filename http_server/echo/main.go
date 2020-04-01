@@ -72,7 +72,11 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	shared_counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", shared_counter))
+	shared_counter_map := map[string]int {
+		"counter": shared_counter,
+	}
+	// return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", shared_counter))
+	return c.JSON(http.StatusOK, shared_counter_map)
 }
 
 func decrementHandler(c echo.Context) error {
