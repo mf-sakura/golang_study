@@ -66,11 +66,18 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	response := &incrResponse{
+		Counter: counter,
+	}
+	return c.JSON(http.StatusOK, response)
 }
 
 type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+type incrResponse struct {
+	Counter int `json:counter`
 }
