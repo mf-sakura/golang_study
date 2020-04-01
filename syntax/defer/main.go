@@ -26,7 +26,9 @@ func catFile(path string) (err error) {
 		}
 		// fileはCloseする必要がある。
 		// 本当はエラーハンドリングが必要(課題)
-		file.Close()
+		if err := file.Close(); err != nil {
+			fmt.Println("Error has occurred by file.Close().")
+		}
 	}()
 
 	// //エラーを明示的に返してdeferが呼ばれるか確認する。
