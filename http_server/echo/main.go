@@ -32,6 +32,8 @@ func main() {
 
 	e.POST("/decr_independent", decrementHandler)
 
+	e.GET("/shared_counter", sharedCounterHandler)
+
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -91,6 +93,13 @@ func decrementHandler(c echo.Context) error {
 		shared_counter -= decrRequest.Num
 		return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d\n", shared_counter))
 	}
+}
+
+func sharedCounterHandler(c echo.Context) error {
+	shared_counter_map := map[string]int{
+		"counter": shared_counter,
+	}
+	return c.JSON(http.StatusOK, shared_counter_map)
 }
 
 type incrRequest struct {
