@@ -12,6 +12,9 @@ unauthorized:
 square:
 	curl localhost:8080/square -H "num:2"
 
+square_large_request:
+	curl -i localhost:8080/square -H "num:11"
+
 square_bad_request:
 	curl -i localhost:8080/square -H "num:a"
 
