@@ -7,7 +7,7 @@ import (
 func main() {
 	n := 100
 	// %vでその型のデフォルトのフォーマットで表示する
-	fmt.Printf("Address of n is %v\n", &n)
+	fmt.Printf("main: Address of n is %v\n", &n)
 
 	// 値渡し
 	// コピーされるので、元のnに変化はない
@@ -21,10 +21,10 @@ func main() {
 }
 
 func increment(n int) int {
-	fmt.Printf("Address of n is %v\n", &n)
+	fmt.Printf("increment: Address of n is %v\n", &n)
 	return n + 1
 }
 func incrementWithPointer(n *int) {
-	fmt.Printf("Address of n is %v\n", n)
+	fmt.Printf("incrementWithPointer: Address of n is %v\n", n)
 	*n++
 }

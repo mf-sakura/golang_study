@@ -32,7 +32,7 @@ func main() {
 	}
 	// keyを昇順でソート
 	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
-
+	fmt.Println(keys)
 	for _, k := range keys {
 		// fmt.Printfでフォーマットに従った文字列を標準出力に出せる
 		fmt.Printf("Name of StudentID:%d is %s\n", k, studnetIDMap[k])
