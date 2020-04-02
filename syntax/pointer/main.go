@@ -18,8 +18,10 @@ func main() {
 }
 
 func increment(n int) int {
+	fmt.Printf("the address of n is %v\n", &n)
 	return n + 1
 }
 func incrementWithPointer(n *int) {
+	fmt.Printf("the address of n is %v\n", &n)
 	*n++
 }

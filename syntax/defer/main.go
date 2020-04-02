@@ -24,7 +24,7 @@ func CatFile(path string) (err error) {
 			fmt.Println("Error Handling in defer called.")
 		}
 		// fileはCloseする必要がある。
-		file.Close()
+		err = file.Close()
 	}()
 
 	buf := make([]byte, 1024)
@@ -35,7 +35,7 @@ func CatFile(path string) (err error) {
 		}
 		if err != nil {
 			fmt.Println("File read error: ", err)
-			return
+			return err
 		}
 		fmt.Print(string(buf[:n]))
 	}
