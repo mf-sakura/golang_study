@@ -6,15 +6,16 @@ import (
 )
 
 func main() {
-	if err := CatFile("test.txt"); err != nil {
+	if err := catFile("test.txt"); err != nil {
 		fmt.Println(err)
 	}
 }
 
-func CatFile(path string) (err error) {
-	file, err := os.Open(path)
-	if err != nil {
-		fmt.Printf("File open error: %v\n", err)
+func catFile(path string) (err error) {
+	file, openErr := os.Open(path)
+	if openErr != nil {
+		fmt.Printf("File open error: %v\n", openErr)
+		err = openErr
 		return
 	}
 
@@ -30,14 +31,18 @@ func CatFile(path string) (err error) {
 		}
 	}()
 
+	// //エラーを明示的に返してdeferが呼ばれるか確認する。
+	// return errors.New("error")
+
 	buf := make([]byte, 1024)
 	for {
-		n, err := file.Read(buf)
+		n, readErr := file.Read(buf)
 		if n == 0 {
 			break
 		}
-		if err != nil {
+		if readErr != nil {
 			fmt.Println("File read error: ", err)
+			err = readErr
 			return
 		}
 		fmt.Print(string(buf[:n]))
