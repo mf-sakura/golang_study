@@ -36,9 +36,20 @@ func (controller *UserController) Update(id string, firstName string, lastName s
 		FirstName: firstName,
 		LastName:  lastName,
 	}
-	err = database.Update(controller.db, user)
+	// トランザクション開始
+	tx := controller.db.MustBegin()
+	defer func() {
+		// panicが起きたらロールバック
+		if recover() != nil {
+			tx.Rollback()
+		}
+	}()
+	err = database.Update(tx, user)
 	if err != nil {
+		tx.Rollback()
 		return err
+	} else {
+		tx.Commit()
 	}
 	return nil
 }

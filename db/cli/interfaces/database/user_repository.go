@@ -46,8 +46,8 @@ func FindAll(db *sqlx.DB) (domain.Users, error) {
 }
 
 // Update is a function for editing all users.
-func Update(db *sqlx.DB, u domain.User) error {
-	_, err := db.Exec("UPDATE users SET first_name = ?, last_name = ? WHERE id = ?", u.FirstName, u.LastName, u.ID)
+func Update(tx *sqlx.Tx, u domain.User) error {
+	_, err := tx.Exec("UPDATE users SET first_name = ?, last_name = ? WHERE id = ?", u.FirstName, u.LastName, u.ID)
 	if err != nil {
 		return err
 	}
