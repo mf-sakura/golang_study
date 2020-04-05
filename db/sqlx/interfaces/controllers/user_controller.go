@@ -52,3 +52,26 @@ func (controller *UserController) Show(id string) (*domain.User, error) {
 	}
 	return user, nil
 }
+
+// Update is a function for updating a user.
+func (controller *UserController) Update(id, firstName, lastName string) (*domain.User, error) {
+	// idをintegerにcastする
+	identifier, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// ここの処理いらんかも
+	user, err := database.FindByID(controller.db, identifier)
+	if err != nil {
+		return nil, err
+	}
+
+	user.FirstName = firstName
+	user.LastName = lastName
+	err = database.Update(controller.db, user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
