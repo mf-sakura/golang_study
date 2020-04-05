@@ -93,6 +93,7 @@ type incrResponse struct {
 // ランダムなポーカーのハンドを返す
 func randomHandHandler(c echo.Context) error {
 	// cards を抽出するロジック部分を `shuffledDeck` みたいな関数に切り出したい
+	// シャッフルされたデッキがあって、その上からカードを1枚ずつ引いていったほうが現実と合ってる
 	suits := []string{"s", "h", "d", "c"}
 	numbers := []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 	var cards []string
