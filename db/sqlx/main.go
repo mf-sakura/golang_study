@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/labstack/echo/v4"
 	"github.com/mf-sakura/golang_study/db/sqlx/infrastructure"
 	"github.com/mf-sakura/golang_study/db/sqlx/interfaces/controllers"
 )
@@ -60,7 +61,20 @@ func main() {
 		}
 		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
 		return
+	case "update":
+		if *id == "" {
+			log.Fatal("required -i option and value.")
+		}
+		user, err := userController.Update(*id, *firstName, *lastName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
+		return
 	default:
-		log.Fatal("Unrecognized option.")
+		e := echo.New()
+		e.POST("/users", func(c echo.Context) error { return userController.CreateByEcho(c) })
+		// 8080ポートで起動
+		e.Logger.Fatal(e.Start(":8080"))
 	}
 }

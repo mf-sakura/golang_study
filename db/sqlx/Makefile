@@ -23,6 +23,9 @@ migrate/up:
 migrate/down:
 	goose -dir "db/migrations" mysql "$(DATASOURCE)" down
 
+create_user:
+	curl -X POST localhost:8080/users -H 'Content-Type: application/json' -d '{"first_name":"折木", "last_name":"奉太郎"}'
+
 .env:
 	cp $@.example $@
 

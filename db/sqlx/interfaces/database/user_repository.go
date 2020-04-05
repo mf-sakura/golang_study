@@ -37,6 +37,42 @@ func Store(db *sqlx.DB, u domain.User) (int, error) {
 	return int(lastInsertID), nil
 }
 
+// Update is a function for updating a user.
+func Update(db *sqlx.DB, user *domain.User) (err error) {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		switch true {
+		case err == nil:
+			tx.Commit()
+		case err != nil:
+			tx.Rollback()
+		default:
+			tx.Rollback()
+		}
+	}()
+
+	// prepared statement
+	// SQL Injection対策
+	sql := "UPDATE `users` SET `first_name` = ?, `last_name` = ? WHERE `id` = ?"
+	stmt, stmtErr := tx.Prepare(sql)
+	if stmtErr != nil {
+		return stmtErr
+	}
+	// 関数終了時にstatementをcloseする
+	defer stmt.Close()
+
+	// SQL文実行
+	_, execErr := stmt.Exec(user.FirstName, user.LastName, user.ID)
+	// execErr = fmt.Errorf("無理やり失敗させてまーす id: %v", user.ID)
+	if execErr != nil {
+		return execErr
+	}
+	return nil
+}
+
 // FindByID is a function for getting a user.
 func FindByID(db *sqlx.DB, identifier int) (*domain.User, error) {
 	var user domain.User
