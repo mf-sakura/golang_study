@@ -10,6 +10,15 @@ type error interface {
 }
 ```
 
+## よくあるエラーハンドリング
+よくある例。  
+`(error以外の型, error)`が関数の戻り値として返ってくるので、ifでハンドリングする。  
+```
+if i, err := strconv.Atoi("a"); err != nil {
+	fmt.Printf("Atoi of i failed. %v\n", err)
+} 
+```
+
 ## 標準パッケージ
 `errors.New`でエラーの生成が可能になります。  
 

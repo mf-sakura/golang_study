@@ -3,13 +3,30 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	gerrors "github.com/pkg/errors"
 )
 
 func main() {
+	// エラーハンドリングの例
+	// (error以外の型, error)が返ってくるので、両方を受け取りifでハンドリングする。
+	iStr := "1"
+	if i, err := strconv.Atoi(iStr); err != nil {
+		fmt.Printf("Atoi of i failed. %v\n", err)
+	} else {
+		fmt.Printf("i is %d\n", i)
+	}
+
+	jStr := "a"
+	if j, err := strconv.Atoi(jStr); err != nil {
+		fmt.Printf("Atoi of j failed. %v\n", err)
+	} else {
+		fmt.Printf("j is %d\n", j)
+	}
+
 	// Goの標準パッケージ
-	err := errors.New("error occurred.")
+	err := errors.New("error occurred")
 	fmt.Printf("%+v\n\n", err)
 
 	// github.com/pkg/errors
