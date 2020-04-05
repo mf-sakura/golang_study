@@ -91,19 +91,33 @@ type incrResponse struct {
 }
 
 // ランダムなポーカーのハンドを返す
-// まだ同じカードを2回使ってしまうバグがある
 func randomHandHandler(c echo.Context) error {
+	// cards を抽出するロジック部分を `shuffledDeck` みたいな関数に切り出したい
 	suits := []string{"s", "h", "d", "c"}
 	numbers := []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
+	var cards []string
+	for _, s := range suits {
+		for _, n := range numbers {
+			cards = append(cards, n+s)
+		}
+	}
 
-	card1 := choice(numbers) + choice(suits)
-	card2 := choice(numbers) + choice(suits)
+	card1, restCards := pickup(cards)
+	card2, _ := pickup(restCards)
 	hand := card1 + card2
 
 	return c.String(http.StatusOK, fmt.Sprintf("your hand is %s. raise or fold?", hand))
 }
 
-func choice(slice []string) string {
-    i := rand.Intn(len(slice))
-    return slice[i]
+func pickup(slice []string) (string, []string) {
+	i := rand.Intn(len(slice))
+	var restSlice []string
+	// 0から(i-1)番目の要素までを追加する
+	restSlice = append(restSlice, slice[:i]...)
+	// 一番後ろの要素がピックアップされていなければ、i+1番目から最後の要素までを追加する
+	if len(restSlice) != len(slice)-1 {
+		restSlice = append(restSlice, slice[i+1:]...)
+	}
+
+	return slice[i], restSlice
 }
