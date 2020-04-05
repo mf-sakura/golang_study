@@ -11,6 +11,11 @@ func main() {
 	}
 }
 
+// named return values
+// Goでの戻り値となる変数に名前をつける。関数の最初で定義した変数名として扱う。関数のドキュメントとして扱う。
+// named return valuesを使うとreturn err と書かずにreturn と書くだけでerrを戻り値として戻せる。
+// 短い関数で使うべき(長い関数で使うと可読性が下がる)
+// https://go-tour-jp.appspot.com/basics/7
 func catFile(path string) (err error) {
 	file, openErr := os.Open(path)
 	if openErr != nil {
@@ -26,10 +31,14 @@ func catFile(path string) (err error) {
 		}
 		// fileはCloseする必要がある。
 		// 本当はエラーハンドリングが必要(課題)
-		file.Close()
+		if err := file.Close(); err != nil {
+			fmt.Println("Error from os.Close")
+		}
 	}()
 
-	// //エラーを明示的に返してdeferが呼ばれるか確認する。
+	// エラーを明示的に返してdeferが呼ばれるか確認する。
+	// defer内でcloseする前にcloseすることでエラーを起こす(closeしたファイルに対してos.Closeは実行できない)
+	// file.Close()
 	// return errors.New("error")
 
 	buf := make([]byte, 1024)
