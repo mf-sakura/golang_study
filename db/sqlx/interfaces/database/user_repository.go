@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 
@@ -58,4 +59,45 @@ func FindAll(db *sqlx.DB) (domain.Users, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func Update(db *sqlx.DB, identifier int, firstName string, lastName string) (*domain.User, error) {
+	// prepared statement
+	// SQL Injection対策
+	stmt, err := db.Prepare("UPDATE users SET first_name = ?, last_name = ? WHERE id = ?")
+	if err != nil {
+		return nil, err
+	}
+	// 関数終了時にstatementをcloseする
+	defer stmt.Close()
+
+	// トランザクションを貼る
+	tx, err := db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		if err == nil {
+			tx.Commit()
+		} else if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Rollback()
+		}
+	}()
+	// SQL文実行
+	_, err = stmt.Exec(firstName, lastName, identifier)
+	if err != nil {
+		return nil, err
+	}
+
+	// 更新後に再取得
+	var user domain.User
+	if err = db.Get(&user, "SELECT id, first_name, last_name FROM users WHERE id = ? limit 1", identifier); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &user, nil
 }

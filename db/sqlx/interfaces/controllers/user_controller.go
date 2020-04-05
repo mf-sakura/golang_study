@@ -52,3 +52,13 @@ func (controller *UserController) Show(id string) (*domain.User, error) {
 	}
 	return user, nil
 }
+
+func (controller *UserController) Update(id string, firstName string, lastName string) (*domain.User, error) {
+	// idをintegerにcastする
+	identifier, err := strconv.Atoi(id)
+	user, err := database.Update(controller.db, identifier, firstName, lastName)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

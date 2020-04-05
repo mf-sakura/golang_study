@@ -60,6 +60,23 @@ func main() {
 		}
 		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
 		return
+	case "update":
+		if *id == "" {
+			log.Fatal("You need to specify a user.id.")
+		}
+		if *firstName == "" && *lastName == "" {
+			log.Fatal("firstName or lastName is needed as args.")
+		}
+		user, err := userController.Update(*id, *firstName, *lastName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if user == nil {
+			fmt.Printf("No user found. ID: %v\n", *id)
+		} else {
+			fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
+		}
+		return
 	default:
 		log.Fatal("Unrecognized option.")
 	}

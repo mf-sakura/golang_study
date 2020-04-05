@@ -40,6 +40,11 @@ $ ./bin/sqlx -a create -f Alan -l Turing
 $ ./bin/sqlx -a show -i 1
 ```
 
+### ユーザー更新
+```sh
+$ ./bin/sqlx -a update -i 1 -f Money -l Forward
+```
+
 ### DB
 ```sh
 # mysqlのコンソールに入る
