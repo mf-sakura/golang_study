@@ -22,18 +22,17 @@ func catFile(path string) (err error) {
 
 	// 課題検証用 defer実行前にClose()して必ず already closed を発生させる
 	// file.Close()
-	defer func() (err error) {
+	defer func() {
 		if err != nil {
 			// エラー時にのみdeferで行いたい処理が書ける
 			fmt.Println("Error Handling in defer called.")
 		}
 		// fileはCloseする必要がある。
 		// 本当はエラーハンドリングが必要(課題)
-		if err = file.Close(); err != nil {
+		if fileErr := file.Close(); fileErr != nil {
 			// エラー時にのみdeferで行いたい処理が書ける
-			fmt.Printf("Failed file.Close(). %v", err)
+			err = fileErr
 		}
-		return
 	}()
 
 	// //エラーを明示的に返してdeferが呼ばれるか確認する。
