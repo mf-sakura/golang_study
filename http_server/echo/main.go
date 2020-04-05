@@ -15,6 +15,10 @@ var (
 	counter = 0
 )
 
+func init() {
+    rand.Seed(time.Now().UnixNano())
+}
+
 func main() {
 	e := echo.New()
 
@@ -100,7 +104,6 @@ func randomHandHandler(c echo.Context) error {
 }
 
 func choice(slice []string) string {
-    rand.Seed(time.Now().UnixNano())
     i := rand.Intn(len(slice))
     return slice[i]
 }
