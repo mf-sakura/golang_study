@@ -96,9 +96,9 @@ func randomHandHandler(c echo.Context) error {
 	suits := []string{"s", "h", "d", "c"}
 	numbers := []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 
-	card1 := fmt.Sprintf("%s%s", choice(numbers), choice(suits))
-	card2 := fmt.Sprintf("%s%s", choice(numbers), choice(suits))
-	hand := fmt.Sprintf("%s%s", card1, card2)
+	card1 := choice(numbers + choice(suits)
+	card2 := choice(numbers + choice(suits)
+	hand := card1 + card2
 
 	return c.String(http.StatusOK, fmt.Sprintf("your hand is %s. raise or fold?", hand))
 }
