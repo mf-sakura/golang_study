@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -29,8 +30,11 @@ func (controller *UserController) Index() ([]domain.User, error) {
 }
 
 // Update is a function for editing a user.
-func (controller *UserController) Update(id string, firstName string, lastName string) error {
+func (controller *UserController) Update(id string, firstName string, lastName string) (err error) {
 	identifier, err := strconv.Atoi(id)
+	if err != nil {
+		return
+	}
 	user := domain.User{
 		ID:        identifier,
 		FirstName: firstName,
@@ -39,17 +43,19 @@ func (controller *UserController) Update(id string, firstName string, lastName s
 	// トランザクション開始
 	tx := controller.db.MustBegin()
 	defer func() {
-		// panicが起きたらロールバック
-		if recover() != nil {
-			tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			// tx が閉じていることにより
+			// rollback には失敗するが特に問題はないのでエラーは返さない
+			if rollbackErr != sql.ErrTxDone {
+				err = rollbackErr
+			}
 		}
 	}()
 	err = database.Update(tx, user)
 	if err != nil {
-		tx.Rollback()
-		return err
-	} else {
-		tx.Commit()
+		return
 	}
-	return nil
+	tx.Commit()
+
+	return
 }
