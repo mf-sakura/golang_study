@@ -24,9 +24,9 @@ func indexOutOfRangeExample() {
 			fmt.Printf("Recovered.\n %v\n\n", r)
 		}
 	}()
-	slice := make([]int, 0, 5)
+	slice := make([]int, 5)
 
-	for i := 1; i <= 6; i++ {
+	for i := 0; i < 6; i++ {
 		slice[i] = i
 	}
 }
