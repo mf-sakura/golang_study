@@ -44,8 +44,9 @@ func main() {
 	stackErr := gerrors.WithStack(gErr)
 	fmt.Printf("%+v\n\n", stackErr)
 	// Wrap, WrapfでStackを追加しながら、エラーメッセージの追加が出来る
-	wrapedErr := gerrors.Wrap(stackErr, "wrap")
-	fmt.Printf("%+v\n\n", wrapedErr)
+	wrappedErr := gerrors.Wrap(stackErr, "wrap")
+	fmt.Printf("%+v\n\n", wrappedErr)
+	fmt.Println(wrappedErr)
 
 	// 自分で定義したエラー
 	// 特定の条件で使うエラーを定義しておき、そのエラーの場合にのみ処理する事が可能になる。
