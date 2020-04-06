@@ -40,6 +40,11 @@ $ ./bin/cli -a show -i 1
 $ ./bin/cli -a create -f Alan -l Turing
 ```
 
+### ユーザー更新
+```sh
+./bin/cli -a update -i 8 -f Yuto -l Sakura
+```
+
 ### DB
 ```sh
 # mysqlのコンソールに入る

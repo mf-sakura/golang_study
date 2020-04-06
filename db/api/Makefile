@@ -30,4 +30,10 @@ vendor:
 	go mod vendor
 
 build:
-	go build -o bin/cli
+	go build -o bin/api
+
+create_users:
+	curl -X POST localhost:8080/users -H 'Content-Type: application/json' -d '{"first_name": "first", "last_name": "last"}'
+
+show_users:
+	curl localhost:8080/users
