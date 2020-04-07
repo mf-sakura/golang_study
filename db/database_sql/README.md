@@ -14,6 +14,7 @@ https://mf.esa.io/posts/129444
 ```sh
 $ make docker-compose/up
 $ make setup
+$ make build
 ```
 
 ## Command
@@ -27,17 +28,17 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-$ ./main main.go -a index
-```
-
-### ユーザー詳細
-```sh
-$ ./main main.go -a show -i 1
+$ ./bin/database_sql -a index
 ```
 
 ### ユーザー作成
 ```sh
-$ ./main main.go -a create -f Alan -l Turing
+$ ./bin/database_sql -a create -f Alan -l Turing
+```
+
+### ユーザー詳細
+```sh
+$ ./bin/database_sql -a show -i 1
 ```
 
 ### DB

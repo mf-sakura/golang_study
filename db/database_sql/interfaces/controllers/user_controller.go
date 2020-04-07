@@ -19,17 +19,17 @@ func NewUserController(db *sql.DB) *UserController {
 }
 
 // Create is a function for creating a user.
-func (controller *UserController) Create(firstName string, lastName string) (domain.User, error) {
+func (controller *UserController) Create(firstName string, lastName string) (*domain.User, error) {
 	user := domain.User{
 		FirstName: firstName,
 		LastName:  lastName,
 	}
 	id, err := database.Store(controller.db, user)
 	if err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
 	user.ID = id
-	return user, nil
+	return &user, nil
 }
 
 // Index is a function for returning all users.
@@ -42,12 +42,12 @@ func (controller *UserController) Index() ([]domain.User, error) {
 }
 
 // Show is a function for returning a user.
-func (controller *UserController) Show(id string) (domain.User, error) {
+func (controller *UserController) Show(id string) (*domain.User, error) {
 	// idをintegerにcastする
 	identifier, err := strconv.Atoi(id)
 	user, err := database.FindByID(controller.db, identifier)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 	return user, nil
 }

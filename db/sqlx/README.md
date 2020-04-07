@@ -27,17 +27,17 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-$ ./main -a index
-```
-
-### ユーザー詳細
-```sh
-$ ./main -a show -i 1
+$ ./bin/sqlx -a index
 ```
 
 ### ユーザー作成
 ```sh
-$ ./main -a create -f Alan -l Turing
+$ ./bin/sqlx -a create -f Alan -l Turing
+```
+
+### ユーザー詳細
+```sh
+$ ./bin/sqlx -a show -i 1
 ```
 
 ### DB
@@ -57,7 +57,7 @@ $ make migrate/down
 # 課題
 1. 下記のコマンドを実行した時にユーザーの情報を編集できるようにしてください。
 ```sh
-$ ./main -a update -i [ID] -f [firstName] -l [lastName]
+$ ./bin/sqlx -a update -i [ID] -f [firstName] -l [lastName]
 ```
 2. トランザクションかけてみる。（ここどういう表現にするかちょっと迷い中）
 3. 下記のようなAPIサーバーを実装してください。

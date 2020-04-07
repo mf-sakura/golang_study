@@ -11,9 +11,11 @@ import (
 
 func main() {
 	sqlHandler := infrastructure.NewSQLHandler()
+	defer sqlHandler.Conn.Close()
 	userController := controllers.NewUserController(sqlHandler.Conn)
-	// フラグを-a追加その後も同様
-	option := flag.String("a", "-h", "action")
+	// flagでコマンドライン引数を読み取る
+	// 例) `-a index`　でoptionにindexが代入される
+	option := flag.String("a", "", "action")
 	id := flag.String("i", "", "user id")
 	firstName := flag.String("f", "Alan", "first name")
 	lastName := flag.String("l", "Turing", "last name")
@@ -25,6 +27,9 @@ func main() {
 		users, err := userController.Index()
 		if err != nil {
 			log.Fatal(err)
+		}
+		if len(users) == 0 {
+			fmt.Println("No users found.")
 		}
 		for _, user := range users {
 			fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
@@ -39,7 +44,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
+		if user == nil {
+			fmt.Printf("No user found. ID: %v\n", *id)
+		} else {
+			fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
+		}
 		return
 	// ユーザー作成
 	case "create":
@@ -55,5 +64,7 @@ func main() {
 		}
 		fmt.Printf("ID: %v, FirstName: %v, LastName: %v\n", user.ID, user.FirstName, user.LastName)
 		return
+	default:
+		log.Fatal("Unrecognized option.")
 	}
 }

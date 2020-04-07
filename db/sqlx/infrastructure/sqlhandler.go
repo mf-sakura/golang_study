@@ -29,7 +29,7 @@ func NewSQLHandler() *SQLHandler {
 	database := os.Getenv("DATABASE_DATASOURCE")
 	conn, err := sqlx.Open("mysql", database)
 	if err != nil {
-		panic(err.Error)
+		log.Fatalf("error opening mysql. %s", err)
 	}
 
 	sqlHandler := new(SQLHandler)
