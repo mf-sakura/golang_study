@@ -55,7 +55,7 @@ func TestStore(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			// Execをかをモックして異常系のテストしたいけどinterface使わないとしんどい
+			// Execなどをモックして異常系のテストしたいけど、interface使わないとしんどいので一旦保留
 		},
 	}
 	for _, tt := range tests {
@@ -73,7 +73,6 @@ func TestStore(t *testing.T) {
 }
 
 // 課題にするメソッド
-// gotestsでの自動生成やってみる
 func TestFirstNameLike(t *testing.T) {
 	type args struct {
 		db        *sqlx.DB
