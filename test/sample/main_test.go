@@ -1,26 +1,47 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
+
+func TestCounter(t *testing.T) {
+	type args struct {
+		x int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{name: "when x is < 99", args: args{x: 1}, want: "1"},
+		{name: "when x is >= 99", args: args{x: 100}, want: "99+"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Counter(tt.args.x); got != tt.want {
+				t.Errorf("Counter() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestSum(t *testing.T) {
-	tables := []struct {
+	type args struct {
 		x int
 		y int
-		n int
-	}{
-		{1, 1, 2},
-		{1, 2, 3},
-		{2, 2, 4},
-		{5, 2, 7},
-		// 下記を追加するとTestSumのcoverageが100%になる
-		// sumが1000以上の時に0であること
-		{400, 700, 0},
 	}
-
-	for _, table := range tables {
-		total := Sum(table.x, table.y)
-		if total != table.n {
-			t.Errorf("Sum of (%d+%d) was incorrect, got: %d, want: %d.", table.x, table.y, total, table.n)
-		}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Sum(tt.args.x, tt.args.y); got != tt.want {
+				t.Errorf("Sum() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
