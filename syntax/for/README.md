@@ -12,7 +12,7 @@ linterを変えれば、検知してくれる。
 検証  
 ```
 $ make install-lint
-$ make lint
+$ make golint
 # Errorにならない
 $ make scopelint
 # Errorになる
