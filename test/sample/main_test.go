@@ -25,6 +25,7 @@ func TestCounter(t *testing.T) {
 	}
 }
 
+// gotestsでの自動生成やってみる
 func TestSum(t *testing.T) {
 	type args struct {
 		x int
