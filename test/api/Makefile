@@ -9,7 +9,7 @@ install:
 docker-compose/up:
 	docker-compose up -d
 
-setup: .env install migrate/init migrate/up
+setup: .env install migrate/init migrate/up migrate/up/test
 
 mysql:
 	mysql -u root -h 127.0.0.1 --protocol tcp --port 3314 -prootpassword $(DBNAME)
