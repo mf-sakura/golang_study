@@ -32,6 +32,9 @@ func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
 }
 
 func (r *mockUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
+	if r.isError {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
@@ -124,6 +127,12 @@ func TestUserController_Create(t *testing.T) {
 
 // 課題： UserController.Indexのカバレッジを100%にする
 func TestUserController_Index(t *testing.T) {
+	// 無名関数
+	createMockFunc := func() echo.Context {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/users", nil)
+		return e.NewContext(req, httptest.NewRecorder())
+	}
 	type fields struct {
 		db         *sqlx.DB
 		repository database.UserRepository
@@ -137,8 +146,24 @@ func TestUserController_Index(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
-	}
+
+		{
+			name: "正常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args: args{c: createMockFunc()},
+		},
+		{
+			name: "異常系 mockRepositoryがエラーを返す",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: createMockFunc()},
+			wantErr: true,
+		}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			controller := &UserController{
