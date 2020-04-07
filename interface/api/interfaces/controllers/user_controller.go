@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/mf-sakura/golang_study/interface/api/domain"
 	"github.com/mf-sakura/golang_study/interface/api/interfaces/database"
+	"github.com/pkg/errors"
 )
 
 // UserController is a struct for db connection
