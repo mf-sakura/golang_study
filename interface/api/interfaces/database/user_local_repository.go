@@ -40,5 +40,10 @@ func (r *onMemoryUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) 
 // 実装は課題
 // 出来ればuser_id昇順で返す
 func (r *onMemoryUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
-	return nil, nil
+	var users []domain.User
+	// sort中にユーザー増えたらどうしよう
+	for _, u := range r.users {
+		users = append(users, u)
+	}
+	return users, nil
 }
