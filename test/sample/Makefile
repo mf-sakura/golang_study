@@ -3,7 +3,7 @@ coverage:
 	go tool cover -html=cover.out
 
 test:
-	go test -v
+	go test ./...
 
 build:
 	go build -o bin/sample
