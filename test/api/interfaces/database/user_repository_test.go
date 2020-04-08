@@ -15,11 +15,6 @@ import (
 var sqlHandler infrastructure.SQLHandler
 
 func TestMain(m *testing.M) {
-	runTests := m.Run()
-	os.Exit(runTests)
-}
-
-func GetTestTransaction() *sqlx.Tx {
 	conn, err := sqlx.Open("mysql", "root:rootpassword@tcp(127.0.0.1:3314)/golang_study_test")
 	if err != nil {
 		panic(err.Error())
@@ -29,10 +24,13 @@ func GetTestTransaction() *sqlx.Tx {
 	if err != nil {
 		panic(err)
 	}
-
 	sqlHandler.Conn = conn
-	tx := conn.MustBegin()
+	runTests := m.Run()
+	os.Exit(runTests)
+}
 
+func GetTestTransaction() *sqlx.Tx {
+	tx := sqlHandler.Conn.MustBegin()
 	return tx
 }
 
