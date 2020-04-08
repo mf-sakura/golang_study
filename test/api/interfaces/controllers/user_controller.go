@@ -49,15 +49,15 @@ func (controller *UserController) Create(c echo.Context) (err error) {
 // Index is a function for returning all users.
 func (controller *UserController) Index(c echo.Context) error {
 	firstName := c.QueryParam("first_name")
+	var err error
+	var users domain.Users
+
 	if firstName != "" {
-		users, err := database.FirstNameLike(controller.db, firstName)
-		if err != nil {
-			return err
-		}
-		return c.JSON(http.StatusOK, &users)
+		users, err = database.FirstNameLike(controller.db, firstName)
+	} else {
+		users, err = database.FindAll(controller.db)
 	}
 
-	users, err := database.FindAll(controller.db)
 	if err != nil {
 		return err
 	}
