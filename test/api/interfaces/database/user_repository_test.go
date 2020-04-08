@@ -36,8 +36,7 @@ func GetTestTransaction() *sqlx.Tx {
 
 func TestStore(t *testing.T) {
 	type args struct {
-		db *sqlx.DB
-		u  domain.User
+		u domain.User
 	}
 	tests := []struct {
 		name    string
@@ -73,7 +72,6 @@ func TestStore(t *testing.T) {
 // 課題にするメソッド
 func TestFirstNameLike(t *testing.T) {
 	type args struct {
-		db        *sqlx.DB
 		firstName string
 	}
 	tests := []struct {
@@ -86,7 +84,7 @@ func TestFirstNameLike(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FirstNameLike(tt.args.db, tt.args.firstName)
+			got, err := FirstNameLike(sqlHandler.Conn, tt.args.firstName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FirstNameLike() error = %v, wantErr %v", err, tt.wantErr)
 				return
