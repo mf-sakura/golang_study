@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"strconv"
+	"database/sql"
 
 	"github.com/jmoiron/sqlx"
 
@@ -31,6 +32,34 @@ func (controller *UserController) Create(firstName string, lastName string) (*do
 	}
 	user.ID = id
 	return &user, nil
+}
+
+func (controller *UserController) Update(id string, firstName string, lastName string) (err error) {
+	identifier, err := strconv.Atoi(id)
+	if err != nil {
+		return
+	}
+	user := domain.User{
+		ID: identifier,
+		FirstName: firstName,
+		LastName:  lastName,
+	}
+	tx := controller.db.MustBegin()
+	defer func() {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			if rollbackErr != sql.ErrTxDone {
+				err = rollbackErr
+			}
+		}
+	}()
+
+	err = database.Update(tx, user)
+	if err != nil {
+		return
+	}
+	tx.Commit()
+
+	return
 }
 
 // Index is a function for returning all users.
