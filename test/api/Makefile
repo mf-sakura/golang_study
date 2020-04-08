@@ -60,3 +60,6 @@ test:
 coverage:
 	go test -coverprofile=cover.out ./...
 	go tool cover -html=cover.out
+
+build:
+	go build -o bin/api
