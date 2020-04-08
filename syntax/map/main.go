@@ -25,12 +25,12 @@ func main() {
 		4: "佐々木",
 	}
 
-	keys := make([]int, 0, 4)
+	keys := []int{}
 	for studentID := range studnetIDMap {
 		keys = append(keys, studentID)
 	}
 
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	sort.Ints(keys)
 	fmt.Println(keys)
 
 	for _, k := range keys {
