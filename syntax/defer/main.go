@@ -19,14 +19,17 @@ func catFile(path string) (err error) {
 		return
 	}
 
+	file.Close()
+
 	defer func() {
 		if err != nil {
 			// エラー時にのみdeferで行いたい処理が書ける
 			fmt.Println("Error Handling in defer called.")
 		}
 		// fileはCloseする必要がある。
-		// 本当はエラーハンドリングが必要(課題)
-		file.Close()
+		if error := file.Close(); error != nil {
+			err = error
+		}
 	}()
 
 	// //エラーを明示的に返してdeferが呼ばれるか確認する。
