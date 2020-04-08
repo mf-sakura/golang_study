@@ -6,7 +6,8 @@ func main() {
 
 	numbers := make([]*int, 0, 3)
 	for i := 0; i < 3; i++ {
-		numbers = append(numbers, &i)
+		pinnedValue := i
+		numbers = append(numbers, &pinnedValue)
 	}
 
 	fmt.Println("Values:", *numbers[0], *numbers[1], *numbers[2])
