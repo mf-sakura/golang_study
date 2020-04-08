@@ -9,10 +9,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/mf-sakura/golang_study/test/api/domain"
-	"github.com/mf-sakura/golang_study/test/api/infrastructure"
 )
 
-var sqlHandler infrastructure.SQLHandler
+var db *sqlx.DB
 
 func TestMain(m *testing.M) {
 	conn, err := sqlx.Open("mysql", "root:rootpassword@tcp(127.0.0.1:3314)/golang_study_test")
@@ -24,13 +23,13 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	sqlHandler.Conn = conn
+	db = conn
 	runTests := m.Run()
 	os.Exit(runTests)
 }
 
 func GetTestTransaction() *sqlx.Tx {
-	tx := sqlHandler.Conn.MustBegin()
+	tx := db.MustBegin()
 	return tx
 }
 
@@ -84,7 +83,7 @@ func TestFirstNameLike(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FirstNameLike(sqlHandler.Conn, tt.args.firstName)
+			got, err := FirstNameLike(db, tt.args.firstName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FirstNameLike() error = %v, wantErr %v", err, tt.wantErr)
 				return
