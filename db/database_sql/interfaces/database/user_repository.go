@@ -6,6 +6,18 @@ import (
 	"github.com/mf-sakura/golang_study/db/database_sql/domain"
 )
 
+// Update is a function for updating a user
+func Update(db *sql.DB, u domain.User) (err error) {
+	_, err = db.Exec(
+		"update users set first_name = ?, last_name = ? where id = ?", u.FirstName, u.LastName, u.ID,
+	)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 // Store is a function for creating a user.
 func Store(db *sql.DB, u domain.User) (int, error) {
 	// `?`はmysqlのplaceholder
