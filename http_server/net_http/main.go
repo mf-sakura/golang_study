@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	// POST counterのリセット
+	http.HandleFunc("/reset", resetHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -85,6 +87,16 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+func resetHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "This endpoint only accepts POST requests. This is a " + req.Method + " request.")
+		return
+	}
+	counter = 0
+	fmt.Fprint(w, "reset counter.")
 }
 
 type incrRequest struct {
