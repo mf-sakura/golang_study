@@ -39,7 +39,7 @@ func unAuthorizedHandler(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusUnauthorized)
 	fmt.Fprint(w, "UnAuthorized")
 }
-
+ 
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(w http.ResponseWriter, req *http.Request) {
 	// Headerの読み込み
@@ -66,6 +66,12 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "This endpoint only accepts post requests. This is a " + req.Method + " request.")
+		return
+	}	
+
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
