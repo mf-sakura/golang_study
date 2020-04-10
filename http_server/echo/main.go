@@ -50,6 +50,11 @@ func squareHandler(c echo.Context) error {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
+	// 100以上の場合は、エラーとする
+	if num > 100 {
+		return echo.NewHTTPError(http.StatusBadRequest, "num have to 100 or less")
+	}
+
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
