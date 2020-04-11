@@ -44,13 +44,10 @@ func Update(db *sqlx.DB, user *domain.User) (err error) {
 		return err
 	}
 	defer func() {
-		switch true {
-		case err == nil:
-			tx.Commit()
-		case err != nil:
-			tx.Rollback()
-		default:
-			tx.Rollback()
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			if rollbackErr != sql.errTxDone {
+				err = rollbackErr
+			}
 		}
 	}()
 
@@ -70,7 +67,8 @@ func Update(db *sqlx.DB, user *domain.User) (err error) {
 	if execErr != nil {
 		return execErr
 	}
-	return nil
+
+	return tx.Commit()
 }
 
 // FindByID is a function for getting a user.
