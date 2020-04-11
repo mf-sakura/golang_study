@@ -45,7 +45,7 @@ func Update(db *sqlx.DB, user *domain.User) (err error) {
 	}
 	defer func() {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			if rollbackErr != sql.errTxDone {
+			if rollbackErr != sql.ErrTxDone {
 				err = rollbackErr
 			}
 		}
