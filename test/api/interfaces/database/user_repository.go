@@ -1,8 +1,6 @@
 package database
 
 import (
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
 
 	"github.com/mf-sakura/golang_study/test/api/domain"
@@ -46,7 +44,6 @@ func FindAll(db *sqlx.DB) (domain.Users, error) {
 func FirstNameLike(db *sqlx.DB, firstName string) (domain.Users, error) {
 	var users []domain.User
 
-	fmt.Printf("SELECT id, first_name, last_name FROM users WHERE first_name LIKE %s", "%"+firstName+"%")
 	// https://godoc.org/github.com/jmoiron/sqlx#DB.Select
 	if err := db.Select(&users, "SELECT id, first_name, last_name FROM users WHERE first_name LIKE ?", "%"+firstName+"%"); err != nil {
 		return nil, err
