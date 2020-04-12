@@ -70,6 +70,19 @@ func TestStore(t *testing.T) {
 
 // 課題にするメソッド
 func TestFirstNameLike(t *testing.T) {
+	test_user := domain.User{
+		FirstName: "roger",
+		LastName: "federer",
+	}
+
+	tx := GetTestTransaction()
+	id, err := Store(tx, test_user)
+	if err != nil {
+		return
+	}
+	test_user.ID = id
+	expected_users := domain.Users{test_user}
+
 	type args struct {
 		firstName string
 	}
@@ -79,7 +92,16 @@ func TestFirstNameLike(t *testing.T) {
 		want    domain.Users
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "検索にヒットする", 
+			args: args{firstName: "rog"}, 
+			want: expected_users,
+		},
+		{
+			name: "検索にヒットしない",
+			args: args{firstName: "rog"}, 
+			want: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
