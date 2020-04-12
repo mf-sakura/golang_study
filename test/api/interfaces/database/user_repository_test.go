@@ -99,7 +99,7 @@ func TestFirstNameLike(t *testing.T) {
 		},
 		{
 			name: "検索にヒットしない",
-			args: args{firstName: "rog"}, 
+			args: args{firstName: "nadal"}, 
 			want: nil,
 		},
 	}
