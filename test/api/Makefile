@@ -45,9 +45,6 @@ migrate/down/test:
 vendor:
 	go mod vendor
 
-build:
-	go build -o bin/test
-
 create_users:
 	curl -X POST localhost:8080/users -H 'Content-Type: application/json' -d '{"first_name": "first", "last_name": "last"}'
 
