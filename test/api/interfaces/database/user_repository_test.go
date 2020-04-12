@@ -81,6 +81,8 @@ func TestFirstNameLike(t *testing.T) {
 		return
 	}
 	test_user.ID = id
+	tx.Commit()
+
 	expected_users := domain.Users{test_user}
 
 	type args struct {
@@ -115,4 +117,5 @@ func TestFirstNameLike(t *testing.T) {
 			}
 		})
 	}
+	db.Exec("delete from users;")
 }
