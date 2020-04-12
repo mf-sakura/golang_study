@@ -83,8 +83,6 @@ func TestFirstNameLike(t *testing.T) {
 	test_user.ID = id
 	tx.Commit()
 
-	expected_users := domain.Users{test_user}
-
 	type args struct {
 		firstName string
 	}
@@ -97,7 +95,7 @@ func TestFirstNameLike(t *testing.T) {
 		{
 			name: "検索にヒットする", 
 			args: args{firstName: "rog"}, 
-			want: expected_users,
+			want: domain.Users{test_user},
 		},
 		{
 			name: "検索にヒットしない",
