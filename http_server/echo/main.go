@@ -13,6 +13,12 @@ var (
 	counter = 0
 )
 
+type (
+    incrementResult struct {
+        Counter  int    `json:"counter"`
+    }
+)
+
 func main() {
 	e := echo.New()
 
@@ -69,7 +75,7 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	return c.JSON(http.StatusOK, incrementResult{Counter: counter})
 }
 
 func resetHandler(c echo.Context) error {
