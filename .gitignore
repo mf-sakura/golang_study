@@ -2,4 +2,4 @@ bin/
 vendor/
 .env
 main
-cover.out
+cover.*
