@@ -42,7 +42,9 @@ func (controller *UserController) Create(c echo.Context) (err error) {
 		return
 	}
 	user.ID = id
-	tx.Commit()
+	if err := tx.Commit(); err != nil {
+		return err
+	}
 	return c.JSON(http.StatusCreated, &user)
 }
 
