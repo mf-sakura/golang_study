@@ -24,6 +24,8 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// POST counterのリセット
+	e.POST("/reset", resetHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -68,6 +70,11 @@ func incrementHandler(c echo.Context) error {
 	}
 	counter += incrRequest.Num
 	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+func resetHandler(c echo.Context) error {
+	counter = 0
+	return c.String(http.StatusOK, "reset counter.")
 }
 
 type incrRequest struct {
