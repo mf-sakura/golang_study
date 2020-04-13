@@ -118,7 +118,7 @@ func TestFirstNameLike(t *testing.T) {
 		{
 			name:    "when search with letters not contained with users.",
 			args:    args{firstName: "hoge"},
-			want:    domain.Users{},
+			want:    nil,
 			wantErr: false,
 		},
 	}
@@ -128,12 +128,6 @@ func TestFirstNameLike(t *testing.T) {
 			got, err := FirstNameLike(db, tt.args.firstName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FirstNameLike() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if len(tt.want) == 0 {
-				if !reflect.DeepEqual(len(got), len(tt.want)) {
-					t.Errorf("FirstNameLike() = %v, want %v", got, tt.want)
-				}
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
