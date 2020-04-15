@@ -11,9 +11,6 @@ func Update(db *sql.DB, u domain.User) (err error) {
 	_, err = db.Exec(
 		"update users set first_name = ?, last_name = ? where id = ?", u.FirstName, u.LastName, u.ID,
 	)
-	if err != nil {
-		return
-	}
 
 	return
 }
