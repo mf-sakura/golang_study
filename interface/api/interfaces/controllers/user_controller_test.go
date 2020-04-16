@@ -32,6 +32,9 @@ func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
 }
 
 func (r *mockUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
+	if r.isError {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
@@ -54,6 +57,13 @@ func noNameUserContext() echo.Context {
 	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(noNameUserJSON))
 	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func indexContext() echo.Context {
+	e := echo.New()
+	validReq := httptest.NewRequest(http.MethodGet, "/users", nil)
+	validReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(validReq, httptest.NewRecorder())
 }
 
 // echoのtestについては以下を参照
@@ -137,7 +147,23 @@ func TestUserController_Index(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args:    args{c: indexContext()},
+		},
+		{
+			name: "異常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: indexContext()},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
