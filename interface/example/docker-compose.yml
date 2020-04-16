@@ -1,0 +1,10 @@
+version: "3"
+services:
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=ap-northeast-1
+      # - DATA_DIR=/usr/share/localstack/data # 永続化はしない
+    ports:
+      - "4572:4572" # S3
