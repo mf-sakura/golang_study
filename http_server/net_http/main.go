@@ -23,7 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
-
+	// GET Counterの読み込み
+	http.HandleFunc("/counter", counterHandler)
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
 }
@@ -52,6 +53,11 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
+	if num >= 100 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "num must be less than 100")
+		return
+	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -59,6 +65,11 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "Method Not Allowed")
+		return
+	}
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
@@ -78,4 +89,9 @@ type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+// counterの値を返す
+func counterHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
 }

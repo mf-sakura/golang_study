@@ -1,4 +1,5 @@
 # sqlxを使ったCLIツール
+https://mf.esa.io/posts/129444
 
 ## Table Of Content
 - [Setup](#Setup)
@@ -26,17 +27,22 @@ Usage of main.go
 
 ### ユーザー一覧
 ```sh
-$ ./bin/sqlx -a index
-```
-
-### ユーザー作成
-```sh
-$ ./bin/sqlx -a create -f Alan -l Turing
+$ ./bin/cli -a index
 ```
 
 ### ユーザー詳細
 ```sh
-$ ./bin/sqlx -a show -i 1
+$ ./bin/cli -a show -i 1
+```
+
+### ユーザー作成
+```sh
+$ ./bin/cli -a create -f Alan -l Turing
+```
+
+### ユーザー更新
+```sh
+./bin/cli -a update -i 8 -f Yuto -l Sakura
 ```
 
 ### DB
@@ -56,7 +62,7 @@ $ make migrate/down
 # 課題
 1. 下記のコマンドを実行した時にユーザーの情報を編集できるようにしてください。
 ```sh
-$ ./bin/sqlx -a update -i [ID] -f [firstName] -l [lastName]
+$ ./bin/cli -a update -i [ID] -f [firstName] -l [lastName]
 ```
 2. トランザクションかけてみる。（ここどういう表現にするかちょっと迷い中）
 3. 下記のようなAPIサーバーを実装してください。
