@@ -55,7 +55,5 @@ func (controller *UserController) Update(id string, firstName string, lastName s
 	if err != nil {
 		return
 	}
-	tx.Commit()
-
-	return
+	return tx.Commit()
 }
