@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package sample;
+
+// The greeting service definition.
+// gRPCのサービス
+service Greeter {
+  // Sends a greeting
+  // 実装されるRPC
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+
+
+// リクエストとレスポンスで使う型に相当
+// messageはCammelCase, fieldはsnake_case
+// https://developers.google.com/protocol-buffers/docs/style?hl=ja#message-and-field-names
+// The request message containing the user's name.
+message HelloRequest {
+  // `= 1`といった数字はフィールドの順番を示す。
+  // シリアライズされたバイト列のどの箇所がどのフィールドに対応するかを決定できる
+  // 欠番と番号追加はして良いが、昔使った番号を別のfieldに割り当てるのはダメ(デシリアライズに失敗する為)
+  string first_name = 1;
+  string last_name = 2;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}

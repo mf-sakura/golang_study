@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package sample;
+
+// The greeting service definition.
+service Notifier {
+  // Sends a greeting
+  rpc PereodicHello (PereodicHelloRequest) returns (stream PeriodicHelloReply) {}
+}
+
+
+// The request message containing the user's name.
+message PereodicHelloRequest {
+  string first_name = 1;
+  string last_name = 2;
+}
+
+// The response message containing the greetings
+message PeriodicHelloReply {
+  string message = 1;
+}
