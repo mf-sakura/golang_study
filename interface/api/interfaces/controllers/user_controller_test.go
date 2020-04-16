@@ -18,9 +18,10 @@ type mockUserRepository struct {
 }
 
 var (
-	mockID          = 2
-	userJSON        = `{"first_name":"John ","last_name":"Doe"}`
-	invalidUserJSON = `{"first_name": 1,"last_name": 2}`
+	mockID              = 2
+	userJSON            = `{"first_name":"John ","last_name":"Doe"}`
+	invalidUserJSON     = `{"first_name": 1,"last_name": 2}`
+	invalidNameUserJSON = `{"first_name": "","last_name": ""}`
 )
 
 func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
@@ -31,6 +32,9 @@ func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
 }
 
 func (r *mockUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
+	if r.isError {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
@@ -44,6 +48,13 @@ func newUserContext() echo.Context {
 func newInvalidUserContext() echo.Context {
 	e := echo.New()
 	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(invalidUserJSON))
+	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func newInvalidNameUserContext() echo.Context {
+	e := echo.New()
+	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(invalidNameUserJSON))
 	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(invalidReq, httptest.NewRecorder())
 }
@@ -91,6 +102,15 @@ func TestUserController_Create(t *testing.T) {
 			args:    args{c: newInvalidUserContext()},
 			wantErr: true,
 		},
+		{
+			name: "異常系 リクエストされたユーザー名が空文字",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args:    args{c: newInvalidNameUserContext()},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -107,6 +127,12 @@ func TestUserController_Create(t *testing.T) {
 
 // 課題： UserController.Indexのカバレッジを100%にする
 func TestUserController_Index(t *testing.T) {
+	// 無名関数
+	createMockFunc := func() echo.Context {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/users", nil)
+		return e.NewContext(req, httptest.NewRecorder())
+	}
 	type fields struct {
 		db         *sqlx.DB
 		repository database.UserRepository
@@ -120,8 +146,24 @@ func TestUserController_Index(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
-	}
+
+		{
+			name: "正常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args: args{c: createMockFunc()},
+		},
+		{
+			name: "異常系 mockRepositoryがエラーを返す",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: createMockFunc()},
+			wantErr: true,
+		}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			controller := &UserController{
