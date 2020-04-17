@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './proto/helloworld_services_pb.rb'
 require './proto/notification_services_pb.rb'
 
