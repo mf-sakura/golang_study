@@ -2,7 +2,7 @@
 # Source: proto/notification.proto for package 'sample'
 
 require 'grpc'
-require 'proto/notification_pb'
+require './proto/notification_pb'
 
 module Sample
   module Notifier
