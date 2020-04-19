@@ -1,0 +1,10 @@
+- id: 1
+  first_name: 一太郎
+  last_name: 兼進
+  created_at: 2020-04-19 00:00:00
+  updated_at: 2020-04-19 23:59:57
+- id: 2
+  first_name: 次郎坊
+  last_name: 兼進
+  created_at: 2020-04-19 00:00:01
+  updated_at: 2020-04-19 23:59:58
