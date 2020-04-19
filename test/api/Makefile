@@ -45,7 +45,7 @@ migrate/down/test:
 vendor:
 	go mod vendor
 
-build:
+build-test:
 	go build -o bin/test
 
 create_users:
@@ -61,5 +61,5 @@ coverage:
 	go test -coverprofile=cover.out ./...
 	go tool cover -html=cover.out
 
-build:
+build-api:
 	go build -o bin/api
