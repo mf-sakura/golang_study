@@ -7,11 +7,15 @@ import (
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/jmoiron/sqlx"
 	"github.com/mf-sakura/golang_study/test/api/domain"
 )
 
-var db *sqlx.DB
+var (
+	db       *sqlx.DB
+	fixtures *testfixtures.Loader
+)
 
 func TestMain(m *testing.M) {
 	conn, err := sqlx.Open("mysql", "root:rootpassword@tcp(127.0.0.1:3314)/golang_study_test")
@@ -24,8 +28,26 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 	db = conn
+
+	// Fixture用意
+	fixtures, err = testfixtures.New(
+		testfixtures.Database(db.DB),
+		testfixtures.Dialect("mysql"),
+		testfixtures.Directory("../../testdata/fixtures"),
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	runTests := m.Run()
 	os.Exit(runTests)
+}
+
+func prepareTestDB() {
+	fmt.Printf("%v", fixtures)
+	if err := fixtures.Load(); err != nil {
+		panic(err)
+	}
 }
 
 func GetTestTransaction() *sqlx.Tx {
@@ -98,14 +120,13 @@ func TestFirstNameLike(t *testing.T) {
 			wantErr: false,
 		},
 	}
+
+	// fixturesのデータをセットする
+	prepareTestDB()
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tx := GetTestTransaction()
-			// INSERT INTO `users` (first_name, last_name) VALUES ("一太郎", "兼進")
-			// INSERT INTO `users` (first_name, last_name) VALUES ("次郎坊", "兼進")
-			// 前提となるSeedデータの登録の仕方がわからない
-			// 上記SQL相当のことがしたいだけなのだが
-			// 今回はやりかたがわからなかったのでmysqlに入って上記のSQLを実行してからテストを行っています
 			got, err := FirstNameLike(db, tt.args.firstName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FirstNameLike() error = %v, wantErr %v", err, tt.wantErr)
