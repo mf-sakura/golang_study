@@ -33,12 +33,22 @@ func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
 }
 
 func (r *mockUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
+	if r.isError {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
 func newUserContext() echo.Context {
 	e := echo.New()
 	validReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(userJSON))
+	validReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(validReq, httptest.NewRecorder())
+}
+
+func indexUserContext() echo.Context {
+	e := echo.New()
+	validReq := httptest.NewRequest(http.MethodGet, "/users", strings.NewReader(""))
 	validReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(validReq, httptest.NewRecorder())
 }
@@ -154,7 +164,23 @@ func TestUserController_Index(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args: args{c: indexUserContext()},
+		},
+		{
+			name: "異常系 mockRepositoryがエラーを返す",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: indexUserContext()},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
