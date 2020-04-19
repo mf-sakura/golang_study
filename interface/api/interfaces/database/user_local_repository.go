@@ -1,7 +1,10 @@
 package database
 
 import (
+	"fmt"
 	"sync"
+
+	"sort"
 
 	"github.com/jmoiron/sqlx"
 
@@ -40,5 +43,19 @@ func (r *onMemoryUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) 
 // 実装は課題
 // 出来ればuser_id昇順で返す
 func (r *onMemoryUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
-	return nil, nil
+	var sortedUsers []domain.User
+	ids := []int{}
+
+	// r.usersから取得するという発想がなくて時間かかってしまった
+	for id := range r.users {
+		ids = append(ids, id)
+	}
+	sort.Ints(ids)
+	fmt.Printf("sortedKeys: %v", ids)
+
+	for _, id := range ids {
+		sortedUsers = append(sortedUsers, r.users[id])
+	}
+
+	return sortedUsers, nil
 }
