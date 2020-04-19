@@ -18,9 +18,11 @@ type mockUserRepository struct {
 }
 
 var (
-	mockID          = 2
-	userJSON        = `{"first_name":"John ","last_name":"Doe"}`
-	invalidUserJSON = `{"first_name": 1,"last_name": 2}`
+	mockID             = 2
+	userJSON           = `{"first_name":"John ","last_name":"Doe"}`
+	invalidUserJSON    = `{"first_name": 1,"last_name": 2}`
+	emptyFirstNameJSON = `{"first_name": "","last_name": "Doe"}`
+	emptyLastNameJSON  = `{"first_name": "John","last_name": ""}`
 )
 
 func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
@@ -44,6 +46,20 @@ func newUserContext() echo.Context {
 func newInvalidUserContext() echo.Context {
 	e := echo.New()
 	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(invalidUserJSON))
+	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func newEmptyFirstNameContext() echo.Context {
+	e := echo.New()
+	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(emptyFirstNameJSON))
+	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func newEmptyLastNameContext() echo.Context {
+	e := echo.New()
+	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(emptyLastNameJSON))
 	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(invalidReq, httptest.NewRecorder())
 }
@@ -89,6 +105,24 @@ func TestUserController_Create(t *testing.T) {
 				repository: &mockUserRepository{},
 			},
 			args:    args{c: newInvalidUserContext()},
+			wantErr: true,
+		},
+		{
+			name: "異常系 ユーザ名(FirstName)が空文字のときエラーを返す",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: newEmptyFirstNameContext()},
+			wantErr: true,
+		},
+		{
+			name: "異常系 ユーザ名(LastName)が空文字のときエラーを返す",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: newEmptyLastNameContext()},
 			wantErr: true,
 		},
 	}
