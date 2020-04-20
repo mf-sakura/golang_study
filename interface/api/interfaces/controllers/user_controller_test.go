@@ -48,7 +48,7 @@ func newUserContext() echo.Context {
 
 func indexUserContext() echo.Context {
 	e := echo.New()
-	validReq := httptest.NewRequest(http.MethodGet, "/users", strings.NewReader(""))
+	validReq := httptest.NewRequest(http.MethodGet, "/users", nil)
 	validReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(validReq, httptest.NewRecorder())
 }
