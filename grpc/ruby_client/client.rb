@@ -13,5 +13,5 @@ notification_client = Sample::Notifier::Stub.new(HOST, :this_channel_is_insecure
 notification_request = Sample::HelloRequest.new(first_name: 'Alan', last_name: 'Turing')
 notification_resopnses = notification_client.pereodic_hello(notification_request)
 notification_resopnses.each do |response|
-  puts "Message: #{response.message}"
+  puts "Periodic: #{response.message}"
 end
