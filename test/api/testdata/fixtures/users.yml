@@ -1,0 +1,11 @@
+- id: 1
+  first_name: 田中
+  last_name: 一郎
+  created_at: 2020-01-01 00:00:00
+  updated_at: 2020-01-01 00:00:00
+- id: 2
+  first_name: 鈴木
+  last_name: 二郎
+  created_at: 2020-01-01 00:00:00
+  updated_at: 2020-01-01 00:00:00
+
