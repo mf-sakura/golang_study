@@ -36,7 +36,9 @@ func TestSum(t *testing.T) {
 		args args
 		want int
 	}{
-		// TODO: Add test cases.
+		{name: "when sum is = 999", args: args{x: 1, y: 998}, want: 999},
+		{name: "when sum is = 1000", args: args{x: 1, y: 999}, want: 0},
+		{name: "when sum is > 1000", args: args{x: 1, y: 1000}, want: 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
