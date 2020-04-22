@@ -15,11 +15,14 @@ func main() {
 	// mutexを使わずにChannelを使う方が楽
 	// Channelは別の回でやるので、Goroutineだけで頑張る例
 	sortedNums := make([]int, 0, len(nums))
+	var wg sync.WaitGroup
 
 	for _, num := range nums {
 		// goroutineでは無名関数も使える
 		// ここでnumを渡す事で、forが進んでも各Goroutineのスコープ内でnは変化しない。
+		wg.Add(1)
 		go func(n int) {
+			defer wg.Done()
 			// n秒スリープする
 			time.Sleep(time.Duration(n) * time.Second)
 			// mutexのLock
@@ -31,7 +34,7 @@ func main() {
 		}(num) // (num)が無名関数の引数
 	}
 
-	time.Sleep(6 * time.Second)
+	wg.Wait()
 	fmt.Println(sortedNums)
 
 }
