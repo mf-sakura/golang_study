@@ -45,7 +45,7 @@ migrate/down/test:
 vendor:
 	go mod vendor
 
-build:
+build/test:
 	go build -o bin/test
 
 create_users:
