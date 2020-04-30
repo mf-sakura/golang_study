@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package sample;
+
+service Chat {
+  rpc Enter (EnterRequest) returns (stream EnterReply) {}
+  rpc SendMessage (SendMessageRequest) returns (SendMessageReply) {}
+}
+
+message EnterRequest {
+  string user_name = 1;
+}
+
+message EnterReply {
+  string message = 1;
+  string sender_name = 2;
+  string message_id = 3;
+}
+message SendMessageRequest{
+  string message = 1;
+  string sender_name = 2;
+}
+message SendMessageReply{
+  bool accepted = 1;
+  string error_message = 2;
+}
