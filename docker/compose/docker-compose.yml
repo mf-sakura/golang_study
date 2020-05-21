@@ -26,9 +26,10 @@ services:
     depends_on:
       - db
   db:
-    # ビルド済みのイメージの使用
-    # DockerHubから取得される
-    image: mysql:5.7
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    image: sample_mysql:latest
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:

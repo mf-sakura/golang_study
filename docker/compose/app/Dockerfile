@@ -22,4 +22,4 @@ RUN echo $REVISION > .version
 
 COPY --from=go_build /app/myapp .
 
-ENTRYPOINT ["./app/myapp"]
+ENTRYPOINT ["./myapp"]
