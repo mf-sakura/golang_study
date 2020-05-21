@@ -1,0 +1,40 @@
+version: "3.4"
+
+services:
+  # サービス名
+  # docker-composeコマンドでは、この名前を使用する。
+  # この名前で他サービスから名前解決が出来る
+  web:
+    # ビルド
+    build:
+      # Dockerfileの相対パス
+      context: ./app
+      # Dockerfileの名前
+      dockerfile: Dockerfile
+    # ビルド結果のイメージ名
+    image: sample_web:latest
+    # 環境変数
+    env_file:
+      - ./app/app.env
+    environment:
+      # サービス名で名前解決が出来る
+      DATABASE_DATASOURCE: root:@tcp(db:3306)/golang_study
+    # ポートフォワード
+    ports:
+      - "8999:8999"
+    # このコンテナを起動する前に起動するコンテナ
+    depends_on:
+      - db
+  db:
+    # ビルド済みのイメージの使用
+    # DockerHubから取得される
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3308:3306"
+    # ボリュームマウント
+    # ホストのパスをコンテナにマウントする事が出来る。
+    volumes:
+      # data dirのマウント
+      - ./mysql/data:/var/lib/mysql
