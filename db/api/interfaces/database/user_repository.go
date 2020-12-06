@@ -5,7 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/mf-sakura/golang_study/db/sqlx/domain"
+	"github.com/mf-sakura/golang_study/db/api/domain"
 )
 
 // Store is a function for creating a user.
