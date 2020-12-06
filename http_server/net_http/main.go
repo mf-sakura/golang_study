@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	counter = 0
+	counter  = 0
+	sleeping = false
 )
 
 func main() {
@@ -24,6 +25,8 @@ func main() {
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
 
+	http.HandleFunc("/goodbye", goodbyeHandler)
+
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
 }
@@ -31,7 +34,23 @@ func main() {
 // レスポンスに`Hello World`を書き込むハンドラー
 // 引数をこの形にするのはnet/httpの仕様から決まっている
 func helloHandler(w http.ResponseWriter, req *http.Request) {
+	if sleeping {
+		w.WriteHeader(http.StatusFailedDependency)
+		return
+	}
+
 	fmt.Fprint(w, "Hello World from Go.")
+}
+
+func goodbyeHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "invalid http method")
+		return
+	}
+
+	fmt.Fprint(w, "Goodbye! See you next time!")
+	sleeping = true
 }
 
 // 200以外のHTTP Statusを返すハンドラー
@@ -42,6 +61,11 @@ func unAuthorizedHandler(w http.ResponseWriter, req *http.Request) {
 
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(w http.ResponseWriter, req *http.Request) {
+	if sleeping {
+		w.WriteHeader(http.StatusFailedDependency)
+		return
+	}
+
 	// Headerの読み込み
 	numStr := req.Header.Get("num")
 	// String -> Intの変換
@@ -52,6 +76,11 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
+	if num > 100 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "num over 100")
+		return
+	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -59,6 +88,17 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if sleeping {
+		w.WriteHeader(http.StatusFailedDependency)
+		return
+	}
+
+	if req.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "invalid http method")
+		return
+	}
+
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
