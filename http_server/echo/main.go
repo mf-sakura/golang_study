@@ -24,6 +24,7 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	e.POST("/fizzbuzz", fizzbuzzHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -50,6 +51,9 @@ func squareHandler(c echo.Context) error {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
+	if num >= 100 {
+		return echo.NewHTTPError(http.StatusBadRequest, "num is over 100")
+	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -62,7 +66,43 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+
+	jsonMap := map[string]int{
+		"counter": counter,
+	}
+
+	return c.JSON(http.StatusOK, jsonMap)
+}
+
+func fizzbuzzHandler(c echo.Context) error {
+	fizzbuzzRequest := fizzbuzzRequest{}
+	if err := c.Bind(&fizzbuzzRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var fizzbuzz string
+	num := fizzbuzzRequest.Num
+
+	switch {
+	case num%15 == 0:
+		fizzbuzz = "FIZZ BUZZ!"
+	case num%3 == 0:
+		fizzbuzz = "FIZZ!"
+	case num%5 == 0:
+		fizzbuzz = "BUZZ!"
+	default:
+		fizzbuzz = strconv.Itoa(num)
+	}
+
+	jsonMap := map[string]string{
+		"fizzbuzz": fizzbuzz,
+	}
+
+	return c.JSON(http.StatusOK, jsonMap)
+}
+
+type fizzbuzzRequest struct {
+	Num int `json:"num"`
 }
 
 type incrRequest struct {
