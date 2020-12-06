@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
 	// mapが参照型である事の確認
@@ -22,9 +25,17 @@ func main() {
 		4: "佐々木",
 	}
 
-	for k, v := range studnetIDMap {
+	ids := make([]int, 0, len(studnetIDMap))
+	for key := range studnetIDMap {
+		ids = append(ids, key)
+	}
+
+	sort.Ints(ids)
+
+	for _, key := range ids {
 		// fmt.Printfでフォーマットに従った文字列を標準出力に出せる
-		fmt.Printf("Name of StudentID:%d is %s\n", k, v)
+		name := studnetIDMap[key]
+		fmt.Printf("Name of StudentID:%d is %s\n", key, name)
 	}
 }
 

@@ -6,6 +6,7 @@ func main() {
 
 	numbers := make([]*int, 0, 3)
 	for i := 0; i < 3; i++ {
+		i := i
 		numbers = append(numbers, &i)
 	}
 
