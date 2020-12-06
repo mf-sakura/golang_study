@@ -24,6 +24,14 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// FIXME 本来は group とか使うのかな.. 時間なく諦めた
+	e.GET("/incr", methodNotAllowedHandler)
+	e.PATCH("/incr", methodNotAllowedHandler)
+	e.PUT("/incr", methodNotAllowedHandler)
+	e.DELETE("/incr", methodNotAllowedHandler)
+
+	// POST Bodyの読み込み
+	e.POST("/dncr", decrementHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -40,6 +48,11 @@ func unAuthorizedHandler(c echo.Context) error {
 	return echo.NewHTTPError(http.StatusUnauthorized, "UnAuthorized")
 }
 
+// 405 を返すハンドラー
+func methodNotAllowedHandler(c echo.Context) error {
+	return echo.NewHTTPError(http.StatusMethodNotAllowed, "MethodNotAllowed")
+}
+
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(c echo.Context) error {
 	// Headerの読み込み
@@ -49,6 +62,11 @@ func squareHandler(c echo.Context) error {
 	if err != nil {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
+	}
+	// validation
+	// FIXME これ使いたい https://github.com/go-playground/validator
+	if num >= 100 {
+		return echo.NewHTTPError(http.StatusBadRequest, "num must be less than 100.")
 	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
@@ -62,11 +80,35 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	ir := &incrResponse{
+		Counter: counter,
+	}
+	return c.JSON(http.StatusOK, ir)
+}
+
+// Bodyから数字を取得してその数字だけCounterをDecrementするハンドラー
+// DBがまだないので簡易的なもの
+func decrementHandler(c echo.Context) error {
+	incrRequest := incrRequest{}
+	if err := c.Bind(&incrRequest); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+	dr := &dncrResponse{
+		Counter: counter,
+	}
+	return c.JSON(http.StatusOK, dr)
 }
 
 type incrRequest struct {
 	// jsonタグをつける事でjsonのunmarshalが出来る
 	// jsonパッケージに渡すので、Publicである必要がある
 	Num int `json:"num"`
+}
+
+type incrResponse struct {
+	Counter int `json:"counter"`
+}
+
+type dncrResponse struct {
+	Counter int `json:"counter"`
 }
