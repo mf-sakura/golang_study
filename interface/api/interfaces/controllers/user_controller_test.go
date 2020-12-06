@@ -21,6 +21,7 @@ var (
 	mockID          = 2
 	userJSON        = `{"first_name":"John ","last_name":"Doe"}`
 	invalidUserJSON = `{"first_name": 1,"last_name": 2}`
+	noNameUserJSON  = `{"first_name": "","last_name": ""}`
 )
 
 func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
@@ -31,6 +32,9 @@ func (r *mockUserRepository) Store(db *sqlx.DB, u domain.User) (int, error) {
 }
 
 func (r *mockUserRepository) FindAll(db *sqlx.DB) (domain.Users, error) {
+	if r.isError {
+		return nil, errors.New("error")
+	}
 	return nil, nil
 }
 
@@ -46,6 +50,20 @@ func newInvalidUserContext() echo.Context {
 	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(invalidUserJSON))
 	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func noNameUserContext() echo.Context {
+	e := echo.New()
+	invalidReq := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(noNameUserJSON))
+	invalidReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(invalidReq, httptest.NewRecorder())
+}
+
+func indexContext() echo.Context {
+	e := echo.New()
+	validReq := httptest.NewRequest(http.MethodGet, "/users", nil)
+	validReq.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return e.NewContext(validReq, httptest.NewRecorder())
 }
 
 // echoのtestについては以下を参照
@@ -91,6 +109,15 @@ func TestUserController_Create(t *testing.T) {
 			args:    args{c: newInvalidUserContext()},
 			wantErr: true,
 		},
+		{
+			name: "ユーザー名が空",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args:    args{c: noNameUserContext()},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -120,7 +147,23 @@ func TestUserController_Index(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "正常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{},
+			},
+			args:    args{c: indexContext()},
+		},
+		{
+			name: "異常系",
+			fields: fields{
+				db:         nil,
+				repository: &mockUserRepository{isError: true},
+			},
+			args:    args{c: indexContext()},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
