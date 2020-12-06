@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	// POST counterのリセット
+	http.HandleFunc("/reset", resetHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -39,7 +41,7 @@ func unAuthorizedHandler(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusUnauthorized)
 	fmt.Fprint(w, "UnAuthorized")
 }
-
+ 
 // Headerから数字を取得して、その二乗を返すハンドラー
 func squareHandler(w http.ResponseWriter, req *http.Request) {
 	// Headerの読み込み
@@ -52,6 +54,13 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
+	// 100以上の場合は、エラーとする
+	if num > 100 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "num have to 100 or less")
+		return
+	}
+
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -59,6 +68,12 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "This endpoint only accepts post requests. This is a " + req.Method + " request.")
+		return
+	}	
+
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
@@ -72,6 +87,16 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+func resetHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "This endpoint only accepts POST requests. This is a " + req.Method + " request.")
+		return
+	}
+	counter = 0
+	fmt.Fprint(w, "reset counter.")
 }
 
 type incrRequest struct {

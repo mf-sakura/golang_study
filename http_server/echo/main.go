@@ -13,6 +13,12 @@ var (
 	counter = 0
 )
 
+type (
+    incrementResult struct {
+        Counter  int    `json:"counter"`
+    }
+)
+
 func main() {
 	e := echo.New()
 
@@ -24,6 +30,8 @@ func main() {
 	e.GET("/square", squareHandler)
 	// POST Bodyの読み込み
 	e.POST("/incr", incrementHandler)
+	// POST counterのリセット
+	e.POST("/reset", resetHandler)
 
 	// 8080ポートで起動
 	e.Logger.Fatal(e.Start(":8080"))
@@ -50,6 +58,11 @@ func squareHandler(c echo.Context) error {
 		// 他のエラーの可能性もあるがサンプルとして纏める
 		return echo.NewHTTPError(http.StatusBadRequest, "num is not integer")
 	}
+	// 100以上の場合は、エラーとする
+	if num > 100 {
+		return echo.NewHTTPError(http.StatusBadRequest, "num have to 100 or less")
+	}
+
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	return c.String(http.StatusOK, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -62,7 +75,12 @@ func incrementHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
 	}
 	counter += incrRequest.Num
-	return c.String(http.StatusOK, fmt.Sprintf("Value of Counter is %d \n", counter))
+	return c.JSON(http.StatusOK, incrementResult{Counter: counter})
+}
+
+func resetHandler(c echo.Context) error {
+	counter = 0
+	return c.String(http.StatusOK, "reset counter.")
 }
 
 type incrRequest struct {
