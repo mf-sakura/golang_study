@@ -16,6 +16,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
 end
 
 module Sample
-  PereodicHelloRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("sample.PereodicHelloRequest").msgclass
-  PeriodicHelloReply = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("sample.PeriodicHelloReply").msgclass
+  PereodicHelloRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("sample.PereodicHelloRequest").msgclass
+  PeriodicHelloReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("sample.PeriodicHelloReply").msgclass
 end

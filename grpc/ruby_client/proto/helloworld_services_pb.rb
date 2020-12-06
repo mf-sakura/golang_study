@@ -2,7 +2,7 @@
 # Source: proto/helloworld.proto for package 'sample'
 
 require 'grpc'
-require 'proto/helloworld_pb'
+require './proto/helloworld_pb'
 
 module Sample
   module Greeter
