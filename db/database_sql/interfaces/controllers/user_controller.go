@@ -18,6 +18,27 @@ func NewUserController(db *sql.DB) *UserController {
 	return &UserController{db: db}
 }
 
+// Update is a function for updating a user.
+func (controller *UserController) Update(id string, firstName string, lastName string) (err error) {
+	identifier, err := strconv.Atoi(id)
+	if err != nil {
+		return
+	}
+
+	user := domain.User{
+		ID: identifier,
+		FirstName: firstName,
+		LastName:  lastName,
+	}
+
+	err = database.Update(controller.db, user)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 // Create is a function for creating a user.
 func (controller *UserController) Create(firstName string, lastName string) (*domain.User, error) {
 	user := domain.User{
