@@ -23,6 +23,8 @@ func main() {
 	http.HandleFunc("/square", squareHandler)
 	// POST Bodyの読み込み
 	http.HandleFunc("/incr", incrementHandler)
+	// GET クエリパラメータの読み込み
+	http.HandleFunc("/addition", additionHandler)
 
 	// 8080ポートで起動
 	http.ListenAndServe(":8080", nil)
@@ -52,6 +54,11 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "num is not integer")
 		return
 	}
+	if num >= 100 {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "num is 100 or more")
+		return
+	}
 	// fmt.Sprintfでフォーマットに沿った文字列を生成できる。
 	fmt.Fprint(w, fmt.Sprintf("Square of %d is equal to %d", num, num*num))
 }
@@ -59,6 +66,11 @@ func squareHandler(w http.ResponseWriter, req *http.Request) {
 // Bodyから数字を取得してその数字だけCounterをIncrementするハンドラー
 // DBがまだないので簡易的なもの
 func incrementHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "Method is not POST")
+		return
+	}
 	body := req.Body
 	// bodyの読み込みに開いたio Readerを最後にCloseする
 	defer body.Close()
@@ -72,6 +84,24 @@ func incrementHandler(w http.ResponseWriter, req *http.Request) {
 
 	counter += incrRequest.Num
 	fmt.Fprint(w, fmt.Sprintf("Value of Counter is %d \n", counter))
+}
+
+// クエリパラメータから２つの値を取得して、加算したものを返すハンドラー
+func additionHandler(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		fmt.Fprint(w, "Method is not GET")
+		return
+	}
+	q := req.URL.Query()
+	p1, p1Err := strconv.Atoi(q.Get("p1"))
+	p2, p2Err := strconv.Atoi(q.Get("p2"))
+	if p1Err != nil || p2Err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "p1 and/or p2 is not integer")
+		return
+	}
+	fmt.Fprint(w, fmt.Sprintf("Addition result is %d \n", p1+p2))
 }
 
 type incrRequest struct {
