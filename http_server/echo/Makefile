@@ -6,6 +6,9 @@ build:
 hello:
 	curl localhost:8080/hello
 
+dito:
+	curl localhost:8080/dito
+
 unauthorized:
 	curl -i localhost:8080/401
 

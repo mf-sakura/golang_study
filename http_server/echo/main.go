@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"io/ioutil"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,6 +19,8 @@ func main() {
 
 	// GET
 	e.GET("/hello", helloHandler)
+	// GET
+	e.GET("/dito", ditoHandler)
 	// GET 200以外のStatus
 	e.GET("/401", unAuthorizedHandler)
 	// GET Headerの読み込み
@@ -33,6 +36,14 @@ func main() {
 // 引数をこの形にするのはechoの仕様から決まっている
 func helloHandler(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello World from Go.")
+}
+
+func ditoHandler(c echo.Context) error {
+	dat, err := ioutil.ReadFile("./aa.dat")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Internal Server Error")
+	}
+	return c.String(http.StatusOK, string(dat))
 }
 
 // 200以外のHTTP Statusを返すハンドラー
